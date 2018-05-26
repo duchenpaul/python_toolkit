@@ -2,6 +2,7 @@ import re
 import base64
 import csv
 
+#######################################################################
 def decode_base64(data):
 	"""Decode base64, padding being optional.
 
@@ -13,6 +14,13 @@ def decode_base64(data):
 	if missing_padding != 0:
 		data += '='* (4 - missing_padding)
 	return base64.urlsafe_b64decode(data).decode('utf-8')
+
+
+def encode_base64(data):
+	"""
+	base64 encode
+	"""
+	return base64.urlsafe_b64encode(data.encode()).decode('utf-8')
 
 ########################################################################
 # Regex
