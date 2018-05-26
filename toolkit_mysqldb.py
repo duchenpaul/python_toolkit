@@ -47,6 +47,21 @@ class _MySQL(object):
 			cursor.close()
 		return result
 
+	def query2dict(self, sql):
+		cursor = self.get_cursor()
+		try:
+			cursor.execute(sql, None)
+			desc = cursor.description
+			column_names = [col[0] for col in desc]
+			data = [dict(zip(column_names, row))
+				for row in cursor.fetchall()]
+		except Exception as e:
+			logging.error("mysql query error: %s", e)
+			return None
+		finally:
+			cursor.close()
+		return data
+
 	def execute(self, sql, param=None):
 		affected_row = 0
 		cursor = self.get_cursor()
