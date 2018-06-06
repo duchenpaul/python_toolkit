@@ -85,6 +85,9 @@ class _Outlook():
 
 outlook = _Outlook()
 
+def outlook_send_mail(subj, body, recipients = ['chdu@merkleinc.com'], attachment_path = None):
+	outlook.send_mail(subj, body, attachment_path = None)
+
 if __name__ == '__main__':
 	# outlook.empty_folder('[ Notification ] iBase')
 	folder = outlook.empty_junkbox()
