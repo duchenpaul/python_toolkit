@@ -6,7 +6,7 @@ def get_basename(FILE):
 	'''
 	Return the basename of a file. e.g. example.txt -> example
 	'''
-	return os.path.splitext(FILE)[0]
+	return os.path.splitext(os.path.basename(FILE))[0]
 
 def script_path():
 	return os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
