@@ -9,10 +9,10 @@ def get_basename(FILE):
 	return os.path.splitext(os.path.basename(FILE))[0]
 
 def file_path(FILE):
-	return os.path.dirname(os.path.realpath(FILE)).replace('\\', '/')
+	return os.path.dirname(os.path.realpath(FILE)) + os.sep
 
 def script_path():
-	return os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
+	return os.path.dirname(os.path.realpath(__file__))
 
 def line_prepender(filename, line):
 	'''
