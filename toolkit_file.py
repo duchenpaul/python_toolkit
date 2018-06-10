@@ -1,5 +1,6 @@
 import os
 import os.path
+import glob
 
 def get_basename(FILE):
 	'''
@@ -22,8 +23,10 @@ def line_prepender(filename, line):
 
 def purge_folder(folder):
 	filelist = [ f for f in os.listdir(folder) ] #if f.endswith(".bak") ]
+	filelist = glob.glob(folder + os.sep + '*')
 	for f in filelist:
-		os.remove(os.path.join(folder, f))
+		print(f)
+		# os.remove(os.path.join(folder, f))
 
 if __name__ == '__main__':
-	print(get_basename('sd.sad'))
+	pass
