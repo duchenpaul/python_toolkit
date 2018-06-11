@@ -1,6 +1,8 @@
 import win32com.client as win32
 import sys
 
+default_recipients = 'chdu@merkleinc.com'
+
 class _Outlook():
 	def __init__(self):
 		app = 'Outlook'
@@ -86,7 +88,7 @@ class _Outlook():
 
 outlook = _Outlook()
 
-def outlook_send_mail(subj, body, recipients = ['chdu@merkleinc.com'], attachment_path = None):
+def outlook_send_mail(subj, body, recipients = [default_recipients], attachment_path = None):
 	outlook.send_mail(subj, body, attachment_path = None)
 
 if __name__ == '__main__':
