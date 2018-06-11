@@ -1,4 +1,5 @@
 import win32com.client as win32
+import sys
 
 class _Outlook():
 	def __init__(self):
@@ -64,7 +65,7 @@ class _Outlook():
 				try:
 					message.Delete()
 				except Exception as e:
-					print(e)
+					self.empty_folder(folderName)
 
 				
 
@@ -89,15 +90,14 @@ def outlook_send_mail(subj, body, recipients = ['chdu@merkleinc.com'], attachmen
 	outlook.send_mail(subj, body, attachment_path = None)
 
 if __name__ == '__main__':
-	# outlook.empty_folder('[ Notification ] iBase')
-	folder = outlook.empty_junkbox()
-	# # print(help(folder))
+	folder = outlook.empty_folder('[ Notification ] Filebridge')
+	# print(help(folder))
 	# for message in folder.Items:
-	# 	# print('Del: ' + message.Subject)
-	# 	# message.Delete()
-	# 	# list.append(message.Subject)
+	# 	print('Del: ' + message.Subject)
+	# 	message.Delete()
+	# 	list.append(message.Subject)
 	# 	a = message	
-
-	# print(type(a))
-	# print(help(a))
-	# print(dir(a))
+	
+	# outlook_send_mail('23', '33')
+	outlook.empty_junkbox()
+	pass
