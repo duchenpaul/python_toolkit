@@ -104,6 +104,8 @@ if __name__ == '__main__':
 	for i in clear_list:
 		outlook.empty_folder(i)
 		pass
+
+	print('Dumping junkbox...')
 	outlook.empty_junkbox()
 
 	# for message in folder.Items:
