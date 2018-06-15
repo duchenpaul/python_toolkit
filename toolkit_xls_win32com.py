@@ -6,7 +6,7 @@ import toolkit_file, toolkit_xls
 
 
 
-class _Excel(object):
+class _Excel():
 	"""docstring for _Excel"""
 	def __init__(self, xls_file):
 		self.xlApp = win32com.client.Dispatch("Excel.Application")
@@ -44,3 +44,6 @@ class _Excel(object):
 			# self.ws.Cells(1, i).Value = i
 			self.ws.Cells(1, i).Interior.color = toolkit_xls.rgb_to_hex(rgb)
 			i += 1
+
+if __name__ == '__main__':
+	pass
