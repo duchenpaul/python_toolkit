@@ -30,7 +30,7 @@ class Imap():
 	def get_mail_folder(self):
 		rv, mailboxes = self.con.list()
 		if rv == 'OK':
-			print("mailboxes:")
+			# print("mailboxes:")
 			# print(mailboxes)
 
 			# get inbox alias
@@ -38,25 +38,56 @@ class Imap():
 			g = lambda i: re.compile(r'(?<=" ")(.*)(?=")', re.IGNORECASE).findall(i.decode('utf-8'))[0]
 			return list(map(g, mailboxes))
 			
-	def set_mail_read(self, mail):
-		pass
+	def set_mail_read(self, mail_num):
+		'''
+		Mark mail as read/unread
+		'''
+		self.con.store(mail_num, '+FLAGS', '\\Seen')
+		# Mark as unread
+		# self.con.store(mail_num, '-FLAGS', '\\Seen')
+		
 		# self.con.store(num,'+FLAGS','\Seen')
 
-######################################
+	def get_mail_num(self, mailFolder):
+		'''
+		Fetch the mail index in a mail folder
+		'''
+		mailFolder = '"{}"'.format(mailFolder)
+		print("Processing mailbox {}...\n".format(mailFolder))
+		rv, data = self.con.select(mailFolder)
+		if rv != 'OK':
+			print("ERROR: Unable to open mailbox ", rv)
+			return
+		rv, data = self.con.search(None, "ALL")
+		return data[0].split()
+
 	def walk_mail_folder(self, mailFolder):
 		rv, data = self.con.select(mailFolder)
 		if rv != 'OK':
 			print("ERROR: Unable to open mailbox ", rv)
 			return
-		print("Processing mailbox...\n")
+		print("Processing mailbox {}...\n".format(mailFolder))
 		rv, data = self.con.search(None, "ALL")
 		
+		print(data)
+		print('-'*90)
 		for mail_num in data[0].split():
-			rv, data = self.con.fetch(mail_num, '(RFC822)')
+			rv, mail_data_bin = self.con.fetch(mail_num, '(RFC822)')
 			if rv != 'OK':
 				print("ERROR getting message", num)
 				return
-			
+			# mail_data_raw = mail_data_bin[0][1].decode('utf-8').replace('\r\n', '\n')
+			# print(mail_data_raw)
+			# self.email_message = email.message_from_string(mail_data_raw)
+			# print(self.email_message['Subject'])
+			# print(email.utils.parseaddr(self.email_message['To']))
+			# print(self.email_message.items())
+			print('x'*90)
+	
+	def mark_all_mail_read(self):
+		for mailbox in self.get_mail_folder():
+			for mail_num in self.get_mail_num(mailbox):
+				self.set_mail_read(mail_num)
 
 
 if __name__ == '__main__':
@@ -69,4 +100,5 @@ if __name__ == '__main__':
 
 	imap = Imap(**config)
 	print(imap.get_mail_folder())
-	imap.walk_mail_folder('"INBOX"')
+	# imap.walk_mail_folder('"INBOX"')
+	imap.mark_all_mail_read()
