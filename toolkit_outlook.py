@@ -48,7 +48,10 @@ class _Outlook():
 		'''
 		Fetch the subject of mail in a folder
 		'''
-		folder = self.inbox.Folders[folderName]
+		# Fetch inbox
+		folder = self.outlookAPI.GetDefaultFolder(6)
+
+		# folder = self.inbox.Folders[folderName]
 		messages = folder.Items
 		return [ message.Subject for message in messages ]
 
@@ -67,6 +70,7 @@ class _Outlook():
 				try:
 					message.Delete()
 				except Exception as e:
+					print("Err, try again")
 					self.empty_folder(folderName)
 
 				
@@ -91,9 +95,19 @@ outlook = _Outlook()
 def outlook_send_mail(subj, body, recipients = [default_recipients], attachment_path = None):
 	outlook.send_mail(subj, body, attachment_path = None)
 
+
 if __name__ == '__main__':
-	folder = outlook.empty_folder('[ Notification ] Filebridge')
-	# print(help(folder))
+	# folder = outlook.empty_folder('[ Notification ] Filebridge')
+	clear_list = ['[ Notification ] Carters', '[ Notification ] iBase', '[ Notification ] Bose', '[ Notification ] System', '[ Notification ] Filebridge']
+	# folder = outlook.empty_folder('[ Notification ] Carters')
+	
+	for i in clear_list:
+		outlook.empty_folder(i)
+		pass
+
+	print('Dumping junkbox...')
+	outlook.empty_junkbox()
+
 	# for message in folder.Items:
 	# 	print('Del: ' + message.Subject)
 	# 	message.Delete()
@@ -101,5 +115,5 @@ if __name__ == '__main__':
 	# 	a = message	
 	
 	# outlook_send_mail('23', '33')
-	outlook.empty_junkbox()
-	pass
+	# 
+

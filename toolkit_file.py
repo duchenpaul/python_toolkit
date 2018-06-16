@@ -32,11 +32,12 @@ def get_file_list(dirname):
 	return file_list
 
 def purge_folder(folder):
-	filelist = [ f for f in os.listdir(folder) ] #if f.endswith(".bak") ]
+	# filelist = [ f for f in os.listdir(folder) ] #if f.endswith(".bak") ]
 	filelist = glob.glob(folder + os.sep + '*')
 	for f in filelist:
 		print(f)
-		# os.remove(os.path.join(folder, f))
+		# os.remove(os.path.join(f)) # using glob
+		# os.remove(os.path.join(folder, f)) # using listdir
 
 if __name__ == '__main__':
 	print(get_file_list('E:\\'))
