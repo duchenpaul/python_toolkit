@@ -3,7 +3,7 @@ import MySQLdb, configparser
 import csv, os
 
 
-config_file = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/') + '/config.ini'
+config_file = os.path.dirname(os.path.realpath(__file__)) + os.sep + 'config.ini'
 
 try:
 	print('Read config file: ' + config_file )
