@@ -1,7 +1,7 @@
 import win32com.client as win32
 import sys
 
-default_recipients = 'chdu@merkleinc.com'
+default_recipients = 'chdu@xx.com'
 
 class _Outlook():
 	def __init__(self):
@@ -11,7 +11,7 @@ class _Outlook():
 		self.inbox = self.outlookAPI.GetDefaultFolder(win32.constants.olFolderInbox)
 		self.deletedBox = self.outlookAPI.GetDefaultFolder(win32.constants.olFolderDeletedItems)
 
-	def send_mail(self, subj, body, recipients = ['chdu@merkleinc.com'], attachment_path = None):
+	def send_mail(self, subj, body, recipients = ['chdu@xxx.com'], attachment_path = None):
 		'''
 		Attachment can be list or string
 		'''

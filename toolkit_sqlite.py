@@ -88,7 +88,7 @@ if __name__ == '__main__':
 	JSON_FILE = PATH + '\\' + 'ctl_rs_process_sql_test.json'
 
 	create_view = '''CREATE TABLE IF NOT EXISTS `work_todo11` as select * from Status_sheet '''
-	truncate_table = '''DELETE FROM `work_todo11` '''
+	truncate_table = '''DELETE FROM `test` '''
 	drop_table = '''DROP TABLE `work_todo11` '''
 	# sqlitedb = _sqlitedb(DB_FILE)
 
