@@ -11,8 +11,8 @@ detach_dir = '.'
 if 'attachments' not in os.listdir(detach_dir):
 	os.mkdir('attachments')
 
-userName = 'qq859755014@126.com'
-passwd = 'lrvxmouxswxizkgq'
+userName = 'xx@126.com'
+passwd = 'xx'
 
 try:
 	imapSession = imaplib.IMAP4_SSL('imap.126.com')

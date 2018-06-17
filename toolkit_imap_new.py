@@ -112,23 +112,11 @@ class Imap():
 if __name__ == '__main__':
 	config = {
 	'EMAIL_SERVER' : 'imap.126.com',
-	'EMAIL_ACCOUNT' : 'qq859755014@126.com',
-	'EMAIL_PASSWORD' : 'lrvxmouxswxizkgq'
+	'EMAIL_ACCOUNT' : 'qqxxxxxx@126.com',
+	'EMAIL_PASSWORD' : 'xxxxxxxx'
 	}
 
-	config_aol = {
-	'EMAIL_SERVER' : 'imap.aol.com',
-	'EMAIL_ACCOUNT' : 'duchenpaul@aol.com',
-	'EMAIL_PASSWORD' : 'du199082'
-	}
-
-	config_outlook = {
-	'EMAIL_SERVER' : 'imap-mail.outlook.com',
-	'EMAIL_ACCOUNT' : 'duchenpaul@live.cn',
-	'EMAIL_PASSWORD' : 'chen199082'
-	}
-
-	with Imap(**config_outlook) as imap:
+	with Imap(**config) as imap:
 		print(imap.get_mail_folder())
 		# imap.walk_mail_folder('&XfJT0ZAB-')
 		# imap.mark_all_mail_read()
