@@ -35,7 +35,7 @@ class Imap():
 
 			# get inbox alias
 			print(mailboxes)
-			g = lambda i: re.compile(r'(?<=" ")(.*)(?=")', re.IGNORECASE).findall(i.decode('utf-8'))[0]
+			g = lambda i: re.compile(r'(?<=" )(.*)', re.IGNORECASE).findall(i.decode('utf-8'))[0]
 			return list(map(g, mailboxes))
 			
 	def set_mail_read(self, mail_num):
@@ -45,14 +45,27 @@ class Imap():
 		self.con.store(mail_num, '+FLAGS', '\\Seen')
 		# Mark as unread
 		# self.con.store(mail_num, '-FLAGS', '\\Seen')
-		
-		# self.con.store(num,'+FLAGS','\Seen')
+	
+	def delete_mail(self, mail_num):
+		print("Delete mail {}".format(self.get_mail_subject(mail_num)))
+		self.con.store(mail_num, '+FLAGS', '\\Deleted')
+		self.con.expunge()
+
+	def get_mail_subject(self, mail_num):
+		rv, mail_data_bin = self.con.fetch(mail_num, '(RFC822)')
+		if rv != 'OK':
+			print("ERROR getting message", num)
+			return
+		# Fetch again if the mail not fetched
+		mail_data_raw = mail_data_bin[0][1].decode('utf-8','ignore').replace('\r\n', '\n')
+		self.email_message = email.message_from_string(mail_data_raw)
+		return self.email_message['Subject']
 
 	def get_mail_num(self, mailFolder):
 		'''
 		Fetch the mail index in a mail folder
 		'''
-		mailFolder = '"{}"'.format(mailFolder)
+		# mailFolder = '"{}"'.format(mailFolder)
 		print("Processing mailbox {}...\n".format(mailFolder))
 		rv, data = self.con.select(mailFolder)
 		if rv != 'OK':
@@ -60,6 +73,12 @@ class Imap():
 			return
 		rv, data = self.con.search(None, "ALL")
 		return data[0].split()
+
+	def empty_mail_folder(self, mailFolder):
+		rev_list = imap.get_mail_num(mailbox)
+		for mail_num in rev_list:
+			# Always delete the first mail
+			imap.delete_mail(rev_list[0])
 
 	def walk_mail_folder(self, mailFolder):
 		rv, data = self.con.select(mailFolder)
@@ -79,7 +98,7 @@ class Imap():
 			# mail_data_raw = mail_data_bin[0][1].decode('utf-8').replace('\r\n', '\n')
 			# print(mail_data_raw)
 			# self.email_message = email.message_from_string(mail_data_raw)
-			# print(self.email_message['Subject'])
+			print(self.email_message['Subject'])
 			# print(email.utils.parseaddr(self.email_message['To']))
 			# print(self.email_message.items())
 			print('x'*90)
@@ -97,8 +116,22 @@ if __name__ == '__main__':
 	'EMAIL_PASSWORD' : 'lrvxmouxswxizkgq'
 	}
 
+	config_aol = {
+	'EMAIL_SERVER' : 'imap.aol.com',
+	'EMAIL_ACCOUNT' : 'duchenpaul@aol.com',
+	'EMAIL_PASSWORD' : 'du199082'
+	}
 
-	imap = Imap(**config)
-	print(imap.get_mail_folder())
-	# imap.walk_mail_folder('"INBOX"')
-	imap.mark_all_mail_read()
+	config_outlook = {
+	'EMAIL_SERVER' : 'imap-mail.outlook.com',
+	'EMAIL_ACCOUNT' : 'duchenpaul@live.cn',
+	'EMAIL_PASSWORD' : 'chen199082'
+	}
+
+	with Imap(**config_outlook) as imap:
+		print(imap.get_mail_folder())
+		# imap.walk_mail_folder('&XfJT0ZAB-')
+		# imap.mark_all_mail_read()
+		for mailbox in imap.get_mail_folder():
+		# mailbox = 'Raspberry pi booted'
+			imap.empty_mail_folder(mailbox)
