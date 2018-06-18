@@ -1,5 +1,4 @@
 import imaplib
-import getpass
 import email
 import datetime
 import re, os
@@ -144,14 +143,15 @@ class Imap():
 
 
 if __name__ == '__main__':
-	config = {
-	'EMAIL_SERVER' : 'imap.126.com',
-	'EMAIL_ACCOUNT' : 'xxx@126.com',
-	'EMAIL_PASSWORD' : 'xxxxx'
-	}
+	config = toolkit_config.read_config_mail()
+	# config = {
+	# 'EMAIL_SERVER' : 'imap.126.com',
+	# 'EMAIL_ACCOUNT' : 'xxx@126.com',
+	# 'EMAIL_PASSWORD' : 'xxxxx'
+	# }
 
 
-	with Imap(**config) as imap:
+	with Imap(config['IMAP_SERVER'], config['EMAIL_ACCOUNT'], config['EMAIL_PASSWORD']) as imap:
 		print(imap.get_mail_folder())
 		# imap.walk_mail_folder('"INBOX"')
 		# imap.mark_all_mail_read()
