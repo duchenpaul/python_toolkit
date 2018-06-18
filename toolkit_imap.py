@@ -6,8 +6,8 @@ import re, os
 
 class Imap():
 	"""docstring for Imap"""
-	def __init__(self, EMAIL_SERVER, EMAIL_ACCOUNT, EMAIL_PASSWORD):
-		self.con = imaplib.IMAP4_SSL(EMAIL_SERVER, port = 993)
+	def __init__(self, IMAP_SERVER, EMAIL_ACCOUNT, EMAIL_PASSWORD):
+		self.con = imaplib.IMAP4_SSL(IMAP_SERVER, port = 993)
 
 		try:
 			rv, data = self.con.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
@@ -109,7 +109,7 @@ class Imap():
 		return data[0].split()
 
 	def empty_mail_folder(self, mailFolder):
-		rev_list = imap.get_mail_num(mailbox)
+		rev_list = imap.get_mail_num(mailFolder)
 		for mail_num in rev_list:
 			# Always delete the first mail
 			imap.delete_mail(rev_list[0])
