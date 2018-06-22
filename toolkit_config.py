@@ -12,13 +12,13 @@ def read_config_mail():
 		print('Read config file: ' + config_file )
 		configRead = configparser.ConfigParser()
 		configRead.read("config.ini")
-		config = {
-			'IMAP_SERVER' : configRead['mail']['IMAP_SERVER'],
-			'SMTP_SERVER' : configRead['mail']['SMTP_SERVER'],
-			'EMAIL_ACCOUNT' : configRead['mail']['EMAIL_ACCOUNT'],
-			'EMAIL_PASSWORD' : configRead['mail']['EMAIL_PASSWORD'],
-			'default_toAddr' : configRead['mail']['default_toAddr'],
-		}
+
+		sectionName = 'mail'
+		options = [ i.upper() for i in configRead.options(sectionName) ]
+		config = {}
+		for j in options:
+			config[j] = configRead[sectionName][j]
+
 	except Exception as e:
 		print("Error read config file, check config.ini")
 		print(e)
