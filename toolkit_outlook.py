@@ -93,7 +93,7 @@ class _Outlook():
 outlook = _Outlook()
 
 def outlook_send_mail(subj, body, recipients = [default_recipients], attachment_path = None):
-	outlook.send_mail(subj, body, attachment_path = None)
+	outlook.send_mail(subj, body, recipients = recipients, attachment_path = None)
 
 
 if __name__ == '__main__':
