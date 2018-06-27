@@ -93,12 +93,12 @@ class _Outlook():
 outlook = _Outlook()
 
 def outlook_send_mail(subj, body, recipients = [default_recipients], attachment_path = None):
-	outlook.send_mail(subj, body, recipients = recipients, attachment_path = None)
+	outlook.send_mail(subj, body, recipients = recipients, attachment_path = attachment_path)
 
 
 if __name__ == '__main__':
 	# folder = outlook.empty_folder('[ Notification ] Filebridge')
-	clear_list = ['[ Notification ] Carters', '[ Notification ] iBase', '[ Notification ] Bose', '[ Notification ] System', '[ Notification ] Filebridge']
+	clear_list = ['[ Notification ] Carters', '[ Notification ] iBase', '[ Notification ] Bose', '[ Notification ] System', '[ Notification ] Filebridge', ]
 	# folder = outlook.empty_folder('[ Notification ] Carters')
 	
 	for i in clear_list:
