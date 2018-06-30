@@ -2,6 +2,10 @@ import imaplib
 import email
 import datetime
 import re, os
+import toolkit_config
+
+config = toolkit_config.read_config_mail('config.ini')
+
 
 class Imap():
 	"""docstring for Imap"""
@@ -143,7 +147,6 @@ class Imap():
 
 
 if __name__ == '__main__':
-	config = toolkit_config.read_config_mail()
 	# config = {
 	# 'EMAIL_SERVER' : 'imap.126.com',
 	# 'EMAIL_ACCOUNT' : 'xxx@126.com',
@@ -152,9 +155,9 @@ if __name__ == '__main__':
 
 
 	with Imap(config['IMAP_SERVER'], config['EMAIL_ACCOUNT'], config['EMAIL_PASSWORD']) as imap:
-		print(imap.get_mail_folder())
+		# print(imap.get_mail_folder())
 		# imap.walk_mail_folder('"INBOX"')
-		# imap.mark_all_mail_read()
+		imap.mark_all_mail_read()
 		# for mailbox in imap.get_mail_folder():
 		# mailbox = 'Raspberry pi booted'
 			# imap.empty_mail_folder(mailbox)

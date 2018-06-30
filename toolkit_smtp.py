@@ -13,7 +13,7 @@ import toolkit_config
 
 #Usage: python send_an_email_with_attachment.py subject content (-f FILEPATH -r "RECIPIENT_1@gmail.com,RECIPIENT_2@gmail.com")
 
-config = toolkit_config.read_config_mail('config_test.ini')
+config = toolkit_config.read_config_mail('config.ini')
 
 
 class Smtp():
