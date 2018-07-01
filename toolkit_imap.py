@@ -5,6 +5,7 @@ import re, os
 import toolkit_config
 
 config = toolkit_config.read_config_mail('config.ini')
+config = toolkit_config.read_config_mail('config_test.ini')
 
 
 class Imap():
