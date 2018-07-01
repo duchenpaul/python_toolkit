@@ -44,12 +44,15 @@ class _Outlook():
 		return [i.Name for i in fldr_iterator]
 
 
-	def fetch_folder(self, folderName):
+	def fetch_folder(self, folderName = 'INBOX'):
 		'''
 		Fetch the subject of mail in a folder
 		'''
-		# Fetch inbox
-		folder = self.outlookAPI.GetDefaultFolder(6)
+		if folderName.UPPER() == 'INBOX':
+			# Fetch inbox
+			folder = self.outlookAPI.GetDefaultFolder(6)
+		else:
+			folder = self.inbox.Folders[folderName]
 
 		# folder = self.inbox.Folders[folderName]
 		messages = folder.Items
