@@ -1,6 +1,6 @@
 #! /usr/bin/env python 
 import sys 
-
+import argparse
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -13,8 +13,8 @@ import toolkit_config
 
 #Usage: python send_an_email_with_attachment.py subject content (-f FILEPATH -r "RECIPIENT_1@gmail.com,RECIPIENT_2@gmail.com")
 
-config = toolkit_config.read_config_mail('config.ini')
-
+config = toolkit_config.read_config_mail('config_test.ini')
+config.pop('IMAP_SERVER')
 
 class Smtp():
 	"""Send mail if DISTRI_LIST is None, send mail to myself
@@ -70,9 +70,32 @@ class Smtp():
 			server.quit()
 
 
-if __name__ == '__main__':
-	'''Usage: python send_an_email_with_attachment.py subject content (-f FILEPATH -r "RECIPIENT_1@gmail.com,RECIPIENT_2@gmail.com")'''
+def send_mail(subject, content, attach_file = None):
+	smtp = Smtp(**config)
+	smtp.send_mail(subject, content, attach_file)
 
-	config.pop('IMAP_SERVER')
-	test = Smtp(**config)
-	test.send_mail('Requested action not taken', 'cilbox unavailabllass sdf', r'E:\python_test\QRCodeViewer.py, E:\python_test\auto_shutdown.bat')
+def script_send_mail():
+	'''Put this in the main to run as script.'''
+	helpMsg = '''
+Send email to the reciever in DISTRI_LIST item of the config file 
+e.g. {} --subject Hello --content 'How are you.' --attach_file 'file1, file2'
+'''.format(__file__)
+	
+	helpMsg_subject = 'Subject of the email'
+	helpMsg_content = 'Content of the email'
+	helpMsg_attach_file = 'Attachment seperated by \',\''
+
+	parser = argparse.ArgumentParser(description=helpMsg)
+	parser.add_argument('-s', '--subject', help=helpMsg_subject, required=True)
+	parser.add_argument('-c', '--content', help=helpMsg_content, required=True)
+	parser.add_argument('-f', '--attach_file', help=helpMsg_attach_file, required=False)
+
+	args = parser.parse_args()
+	parameterDict = vars(args)
+
+	send_mail(**parameterDict)
+
+
+if __name__ == '__main__':
+	script_send_mail()
+	# send_mail('subject', 'content', r'toolkit_imap.py, toolkit_sqlite.py')
