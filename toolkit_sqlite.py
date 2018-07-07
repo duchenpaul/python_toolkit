@@ -45,6 +45,10 @@ class _sqlitedb():
 			self.cursor.close()
 		return affected_row
 
+	def executescript(self, sql):
+		self.cursor = self.conn.cursor()
+		self.cursor.executescript(sql)
+
 	def executemany(self, sql, params = None):
 		self.cursor = self.conn.cursor()
 		affected_rows = 0
@@ -81,6 +85,8 @@ class _sqlitedb():
 		insertSql = "INSERT INTO {} ({}) VALUES(?{});".format(tableName, columnNamesSqlJoined, ',?'*(len(tupleList[0]) - 1))
 
 		self.executemany(insertSql, tupleList)
+
+
 
 if __name__ == '__main__':
 	PATH = r'C:\Users\chdu\Desktop\Portal\Other\python_toolkit'
