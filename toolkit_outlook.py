@@ -48,7 +48,7 @@ class _Outlook():
 		'''
 		Fetch the subject of mail in a folder
 		'''
-		if folderName.UPPER() == 'INBOX':
+		if folderName.upper() == 'INBOX':
 			# Fetch inbox
 			folder = self.outlookAPI.GetDefaultFolder(6)
 		else:
@@ -76,7 +76,7 @@ class _Outlook():
 					print("Err, try again")
 					self.empty_folder(folderName)
 
-				
+
 
 	def empty_junkbox(self):
 		'''
@@ -103,7 +103,7 @@ if __name__ == '__main__':
 	# folder = outlook.empty_folder('[ Notification ] Filebridge')
 	clear_list = ['[ Notification ] Carters', '[ Notification ] iBase', '[ Notification ] Bose', '[ Notification ] System', '[ Notification ] Filebridge', ]
 	# folder = outlook.empty_folder('[ Notification ] Carters')
-	
+
 	for i in clear_list:
 		outlook.empty_folder(i)
 		pass
@@ -115,8 +115,7 @@ if __name__ == '__main__':
 	# 	print('Del: ' + message.Subject)
 	# 	message.Delete()
 	# 	list.append(message.Subject)
-	# 	a = message	
-	
-	# outlook_send_mail('23', '33')
-	# 
+	# 	a = message
 
+	# outlook_send_mail('23', '33')
+	#
