@@ -131,7 +131,7 @@ class Imap():
 		for mail_num in data[0].split():
 			rv, mail_data_bin = self.con.fetch(mail_num, '(RFC822)')
 			if rv != 'OK':
-				print("ERROR getting message", num)
+				print("ERROR getting message", mail_num)
 				return
 			mail_data_raw = mail_data_bin[0][1].decode('utf-8').replace('\r\n', '\n')
 			# print(mail_data_raw)
