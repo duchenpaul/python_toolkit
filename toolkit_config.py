@@ -26,7 +26,7 @@ def read_config_mail(configFile=config_file):
 	return config
 
 
-def read_config_mysql():
+def read_config_mysql(configFile=config_file):
 	try:
 		print('Read config file: ' + configFile )
 		configRead = configparser.ConfigParser()
