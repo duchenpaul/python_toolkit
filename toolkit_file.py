@@ -1,6 +1,8 @@
 import os
 import os.path
 import glob
+from pathlib import Path
+
 
 def get_basename(FILE):
     '''
@@ -43,6 +45,14 @@ def purge_folder(folder):
         print(f)
         # os.remove(os.path.join(f)) # using glob
         # os.remove(os.path.join(folder, f)) # using listdir
+
+
+def create_folder(folderName):
+    '''Create folder if not exists'''
+    my_file = Path(folderName)
+    if not my_file.is_dir():
+        print('Folder {} not found, creating a new one'.format(folderName))
+        os.mkdir(folderName)
 
 
 if __name__ == '__main__':
