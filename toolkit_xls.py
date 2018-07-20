@@ -8,13 +8,13 @@ ws = wb.active
 
 
 def csv2xlsx(csvFile, xlsxFile):
-	with open(csvFile, 'r', encoding = 'utf-8') as f:
-		reader = csv.reader(f, delimiter=',')
-		for row in reader:
-			ws.append(row)
-	wb.save(xlsxFile)
-	wb.close()
+    with open(csvFile, 'r', encoding='utf-8') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            ws.append(row)
+    wb.save(xlsxFile)
+    wb.close()
 
 
 if __name__ == '__main__':
-	pass
+    pass
