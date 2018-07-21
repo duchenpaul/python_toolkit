@@ -37,7 +37,10 @@ class Smtp():
         msg = MIMEMultipart()
         msg['Subject'] = subject
         msg['From'] = self.EMAIL_ACCOUNT
-        msg['To'] = ', '.join(self.DISTRI_LIST)
+        if isinstance(type(self.DISTRI_LIST), (list,)):
+            msg['To'] = ', '.join(self.DISTRI_LIST)
+        else:
+            msg['To'] = self.DISTRI_LIST
 
         if attach_file:
             attachFileList = [i.strip() for i in attach_file.split(',')]
