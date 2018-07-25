@@ -29,12 +29,11 @@ def line_prepender(filename, line):
         f.write(line.rstrip('\r\n') + '\n' + content)
 
 
-def get_file_list(dirname):
+def get_file_list(folder):
     file_list = []
-    for i in os.walk(dirname):
-        if not i[1]:
-            for j in i[2]:
-                file_list.append(''.join(str(i[0]) + os.sep + j))
+    for path, subdirs, files in os.walk(folder):
+        for name in files:
+            file_list.append(os.path.join(path, name))
     return file_list
 
 
