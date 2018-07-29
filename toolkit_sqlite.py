@@ -18,11 +18,20 @@ class _sqlitedb():
         '''
         Executed after "with"
         '''
-        print('Close the DB')
-        self.cursor.close()
         if hasattr(self, 'self.cursor'):
             print('Close the DB')
             self.cursor.close()
+
+    def create_database(self, SQLFile):
+        '''Create a new database using deploy SQLFile'''
+        if not toolkit_file.check_file_exists(DB_FILE):
+            print('Deploy {} to {}'.format(SQLFile, DB_FILE))
+            self.conn = sqlite3.connect(DB_FILE)
+            self.cursor = self.conn.cursor()
+            with open(SQLFile) as f:
+                self.cursor.executescript(f.read())
+        else:
+            print('{} exists'.format(DB_FILE))
 
     def query(self, sql):
         self.cursor = self.conn.cursor()
