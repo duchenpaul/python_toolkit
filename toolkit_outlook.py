@@ -119,18 +119,5 @@ if __name__ == '__main__':
                   '[ Notification ] Bose', '[ Notification ] System', '[ Notification ] Filebridge', ]
     # folder = outlook.empty_folder('[ Notification ] Carters')
 
-    for i in clear_list:
-        outlook.empty_folder(i)
-        pass
-
-    print('Dumping junkbox...')
-    outlook.empty_junkbox()
-
-    # for message in folder.Items:
-    # 	print('Del: ' + message.Subject)
-    # 	message.Delete()
-    # 	list.append(message.Subject)
-    # 	a = message
-
     # outlook_send_mail('23', '33')
     #
