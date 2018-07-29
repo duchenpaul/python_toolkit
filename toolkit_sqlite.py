@@ -19,6 +19,9 @@ class _sqlitedb():
         '''
         print('Close the DB')
         self.cursor.close()
+        if hasattr(self, 'self.cursor'):
+            print('Close the DB')
+            self.cursor.close()
 
     def query(self, sql):
         self.cursor = self.conn.cursor()
