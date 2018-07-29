@@ -3,6 +3,15 @@ import os.path
 import glob
 from pathlib import Path
 
+def check_file_exists(FILE):
+    '''Check if the FILE exists'''
+    return Path(FILE).is_file()
+
+
+def check_dir_exists(DIR):
+    '''Check if the DIR exists'''
+    return Path(DIR).is_dir()
+
 
 def get_basename(FILE):
     '''
