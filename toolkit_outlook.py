@@ -59,6 +59,20 @@ class _Outlook():
         messages = folder.Items
         return [message.Subject for message in messages]
 
+    def fetch_mail(self, folderName = 'INBOX', subject = 'keywords'):
+        '''
+        Fetch the subject of mail in a folder
+        '''
+        if folderName.upper() == 'INBOX':
+            # Fetch inbox
+            folder = self.outlookAPI.GetDefaultFolder(6)
+        else:
+            folder = self.inbox.Folders[folderName]
+
+        # folder = self.inbox.Folders[folderName]
+        messages = folder.Items
+        return [message.HTMLBody for message in messages if message.Subject == subject]
+
     def empty_folder(self, folderName):
         '''
         Put all mails in the folder into deleted box
@@ -91,19 +105,6 @@ class _Outlook():
 
         print("Purge done")
 
-    def fetch_mail(self, folderName = 'INBOX', subject = 'keywords'):
-        '''
-        Fetch the subject of mail in a folder
-        '''
-        if folderName.upper() == 'INBOX':
-            # Fetch inbox
-            folder = self.outlookAPI.GetDefaultFolder(6)
-        else:
-            folder = self.inbox.Folders[folderName]
-
-        # folder = self.inbox.Folders[folderName]
-        messages = folder.Items
-        return [message.HTMLBody for message in messages if message.Subject == subject]
 
 outlook = _Outlook()
 
