@@ -117,7 +117,6 @@ if __name__ == '__main__':
     with _sqlitedb(DB_FILE) as sqlitedb:
         # print(sqlitedb.query('select * from Status_sheet'))
         # sqlitedb.execute(create_view)
-        sqlitedb.execute(truncate_table)
-        sqlitedb.load_json(JSON_FILE, 'test')
+        pass
         # sqlitedb.executemany(batch_insert, tupleList)
         # sqlitedb.execute(drop_table)
