@@ -72,6 +72,7 @@ class _sqlitedb():
             self.conn.commit()
             affected_rows = self.cursor.rowcount
         except Exception as e:
+            self.conn.rollback()
             logging.error("sqlite executemany error: %s", e)
             return 0
         finally:
