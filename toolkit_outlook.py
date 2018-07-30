@@ -14,9 +14,10 @@ class _Outlook():
         self.deletedBox = self.outlookAPI.GetDefaultFolder(
             win32.constants.olFolderDeletedItems)
 
-    def send_mail(self, subj, body, recipients=['chdu@xxx.com'], attachment_path=None):
+    def send_mail(self, subj, body, recipients=['chdu@merkleinc.com'], attachment_path=None, mail_type = 'PlainText'):
         '''
         Attachment can be list or string
+        mail_type: PlainText/html
         '''
         print("Subject: " + subj)
         print("Body: " + body)
@@ -34,7 +35,11 @@ class _Outlook():
                     mail.Attachments.Add(Source=i)
 
         mail.Subject = subj
-        mail.Body = body
+        if mail_type == 'html':
+            mail.HTMLBody = body
+        else:
+            mail.HTMLBody = body
+        
         mail.Send()
         print('Mail sent')
 
