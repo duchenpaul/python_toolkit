@@ -53,6 +53,7 @@ class _sqlitedb():
             self.conn.commit()
             affected_row = self.cursor.rowcount
         except Exception as e:
+            self.conn.rollback()
             logging.error("sqlite execute error: %s", e)
             return 0
         finally:
