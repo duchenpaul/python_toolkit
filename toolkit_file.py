@@ -63,5 +63,13 @@ def create_folder(folderName):
         os.mkdir(folderName)
 
 
+def text_replace_in_file(pattern, string, file):
+    '''Replace pattern with string in file'''
+    with open(file) as f:
+        replaced_script = re.sub(pattern, string, f.read(), flags=re.IGNORECASE)
+    with open(file, 'w') as f:
+        f.write(replaced_script)
+
+
 if __name__ == '__main__':
     print(get_file_list('E:\\'))
