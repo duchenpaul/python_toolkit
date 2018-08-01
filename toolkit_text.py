@@ -28,7 +28,7 @@ def encode_base64(data):
 # Regex
 
 
-def regex_find(text, patten, string):
+def regex_find(patten, string, text):
     '''
     return list
     '''
