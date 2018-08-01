@@ -32,10 +32,10 @@ def regex_find(pattern, string, text):
     '''
     return list
     '''
-    match_return = re.compile(patten, re.IGNORECASE).findall(text)
+    match_return = re.compile(pattern, re.IGNORECASE).findall(text)
     if match_return:
         print('-' * 20)
-        print(patten + ' detected. ' + 'Count: ' + str(len(match_return)))
+        print(pattern + ' detected. ' + 'Count: ' + str(len(match_return)))
         print(str(match_return), ' -> ', string)
         print('-' * 20)
     return match_return
@@ -45,12 +45,12 @@ def regex_replace(pattern, string, text):
     '''
     Replace pattern with string in text
     '''
-    return re.sub(patten, string, text, flags=re.IGNORECASE)
+    return re.sub(pattern, string, text, flags=re.IGNORECASE)
 
 
-def regex_replace_file(FILENAME, patten, string, exception=None):
+def regex_replace_file(FILENAME, pattern, string, exception=None):
     '''
-    Replace the regex patten with string of a file, except exceptions
+    Replace the regex pattern with string of a file, except exceptions
     '''
     with open(FILENAME, 'r') as f:
         text = f.read()
@@ -59,7 +59,7 @@ def regex_replace_file(FILENAME, patten, string, exception=None):
         print(" - Skip " + exception)
         return
     with open(FILENAME, 'w') as f:
-        f.write(re.sub(patten, string, text, flags=re.IGNORECASE))
+        f.write(re.sub(pattern, string, text, flags=re.IGNORECASE))
 
 ########################################################################
 
