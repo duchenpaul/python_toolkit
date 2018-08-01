@@ -28,7 +28,7 @@ def encode_base64(data):
 # Regex
 
 
-def regex_find(patten, string, text):
+def regex_find(pattern, string, text):
     '''
     return list
     '''
@@ -41,9 +41,9 @@ def regex_find(patten, string, text):
     return match_return
 
 
-def regex_replace(patten, string, text):
+def regex_replace(pattern, string, text):
     '''
-    return list
+    Replace pattern with string in text
     '''
     return re.sub(patten, string, text, flags=re.IGNORECASE)
 
