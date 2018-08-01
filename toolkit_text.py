@@ -41,7 +41,7 @@ def regex_find(text, patten, string):
     return match_return
 
 
-def regex_replace(text, patten, string):
+def regex_replace(patten, string, text):
     '''
     return list
     '''
@@ -122,4 +122,4 @@ def csv2table(fileName, table):
 
 
 if __name__ == '__main__':
-    print(csv2list('./fileName.csv'))
+    pass
