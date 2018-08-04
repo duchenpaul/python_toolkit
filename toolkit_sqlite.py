@@ -105,6 +105,11 @@ class _sqlitedb():
 
         self.executemany(insertSql, tupleList)
 
+    def dump_database(self):
+        with open(DB_FILE + '.sql', 'w') as f:
+            for line in self.conn.iterdump():
+                f.write('%s\n' % line)
+
 
 if __name__ == '__main__':
     PATH = r'C:\Users\chdu\Desktop\Portal\Other\python_toolkit'
