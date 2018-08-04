@@ -8,8 +8,9 @@ class _sqlitedb():
     """docstring for _sqlitedb"""
 
     def __init__(self, DB_FILE):
-        if toolkit_file.check_file_exists(DB_FILE):
-            self.conn = sqlite3.connect(DB_FILE)
+		self.DB_FILE = DB_FILE
+        if toolkit_file.check_file_exists(self.DB_FILE):
+            self.conn = sqlite3.connect(self.DB_FILE)
 
     def __enter__(self):
         return self
@@ -24,14 +25,14 @@ class _sqlitedb():
 
     def create_database(self, SQLFile):
         '''Create a new database using deploy SQLFile'''
-        if not toolkit_file.check_file_exists(DB_FILE):
-            print('Deploy {} to {}'.format(SQLFile, DB_FILE))
-            self.conn = sqlite3.connect(DB_FILE)
+        if not toolkit_file.check_file_exists(self.DB_FILE):
+            print('Deploy {} to {}'.format(SQLFile, self.DB_FILE))
+            self.conn = sqlite3.connect(self.DB_FILE)
             self.cursor = self.conn.cursor()
             with open(SQLFile) as f:
                 self.cursor.executescript(f.read())
         else:
-            print('{} exists'.format(DB_FILE))
+            print('{} exists'.format(self.DB_FILE))
 
     def query(self, sql):
         self.cursor = self.conn.cursor()
@@ -106,7 +107,8 @@ class _sqlitedb():
         self.executemany(insertSql, tupleList)
 
     def dump_database(self):
-        with open(DB_FILE + '.sql', 'w') as f:
+        print('Dump database to {}'.format(self.DB_FILE + '.sql'))
+        with open(self.DB_FILE + '.sql', 'w') as f:
             for line in self.conn.iterdump():
                 f.write('%s\n' % line)
 
