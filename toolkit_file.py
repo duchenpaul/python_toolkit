@@ -73,6 +73,7 @@ def text_replace_in_file(pattern, string, file):
 
 
 def convert_encode2utf8(sourceFileName, targetFileName, srcEncoding = 'utf-16'):
+    BLOCKSIZE = 1048576 # or some other, desired size in bytes
     with codecs.open(sourceFileName, 'r', 'utf-16') as sourceFile:
         with codecs.open(targetFileName, 'w', 'utf-8') as targetFile:
             while True:
