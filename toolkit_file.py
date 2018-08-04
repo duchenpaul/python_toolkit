@@ -2,6 +2,7 @@ import os, re
 import os.path
 import glob
 from pathlib import Path
+import codecs
 
 def check_file_exists(FILE):
     '''Check if the FILE exists'''
@@ -70,6 +71,15 @@ def text_replace_in_file(pattern, string, file):
     with open(file, 'w') as f:
         f.write(replaced_script)
 
+
+def convert_encode2utf8(sourceFileName, targetFileName, srcEncoding = 'utf-16'):
+    with codecs.open(sourceFileName, 'r', 'utf-16') as sourceFile:
+        with codecs.open(targetFileName, 'w', 'utf-8') as targetFile:
+            while True:
+                contents = sourceFile.read(BLOCKSIZE)
+                if not contents:
+                    break
+                targetFile.write(contents)
 
 if __name__ == '__main__':
     print(get_file_list('E:\\'))
