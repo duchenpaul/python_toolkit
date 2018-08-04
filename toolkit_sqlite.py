@@ -108,7 +108,7 @@ class _sqlitedb():
 
     def dump_database(self):
         print('Dump database to {}'.format(self.DB_FILE + '.sql'))
-        with open(self.DB_FILE + '.sql', 'w') as f:
+        with open(self.DB_FILE + '.sql', 'w', encoding = 'utf-8') as f:
             for line in self.conn.iterdump():
                 f.write('%s\n' % line)
 
