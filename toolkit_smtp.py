@@ -37,7 +37,7 @@ class Smtp():
         msg = MIMEMultipart()
         msg['Subject'] = subject
         msg['From'] = self.EMAIL_ACCOUNT
-        if isinstance(type(self.DISTRI_LIST), (list,)):
+        if type(self.DISTRI_LIST) is list:
             msg['To'] = ', '.join(self.DISTRI_LIST)
         else:
             msg['To'] = self.DISTRI_LIST
@@ -86,7 +86,7 @@ def send_mail(subject, content, attach_file=None):
 def script_send_mail():
     '''Put this in the main to run as script.'''
     helpMsg = '''
-Send email to the reciever in DISTRI_LIST item of the config file 
+Send email to the reciever in DISTRI_LIST item of the config file
 e.g. {} --subject Hello --content 'How are you.' --attach_file 'file1, file2'
 '''.format(__file__)
 
