@@ -113,9 +113,15 @@ def csv2dict(csv_file):
     Iutput: csv file
     Onput: dictList
     '''
-    data = pd.read_csv(csv_file, encoding = 'utf-8')
-    print(print(data))
-    print(data.to_dict())
+    dataFrame = pd.read_csv(csv_file, encoding = 'utf-8', header = 0)
+    # print(data.to_dict())
+    dict_list = []
+    for i in dataFrame.index:
+        data_dict = {}
+        for column in dataFrame.columns:
+            data_dict[column] = dataFrame[column][i]
+        dict_list.append(data_dict)
+    return dict_list
 
 ########################################################################
 
@@ -124,7 +130,19 @@ def csv2table(fileName, table):
     pass
 
 
+def fwf2dict(FILE, widthList):
+    '''Transform fixed width file into dict'''
+
+    # Specify "name = [col1, col2, ...]", header = 0 to set the first line as header
+    dataFrame = pd.read_fwf(FILE, header=None, widths=widthList, )
+    print(dataFrame)
+    return dataFrame.to_dict()
+
+
 if __name__ == '__main__':
-    csvFile = 'trx_his_vm0001752.csv'
-    csv2dict(csvFile)
-    # print(csv2dict(csvFile))
+    x = fwf2dict('test.txt', [8, 16, 16, 12, 14, 16, 7,])
+    print(x)
+
+    # _ = csv2dict('FL_insurance_sample.csv')
+    # print(_)
+#  'Account', 'LastName', 'FirstName', 'Balance', 'CreditLimit', 'AccountCreated', 'Rating', 
