@@ -1,6 +1,7 @@
 import re
 import base64
 import csv
+import pandas as pd
 
 #######################################################################
 
@@ -112,7 +113,9 @@ def csv2dict(csv_file):
     Iutput: csv file
     Onput: dictList
     '''
-    pass
+    data = pd.read_csv(csv_file, encoding = 'utf-8')
+    print(print(data))
+    print(data.to_html())
 
 ########################################################################
 
@@ -122,4 +125,6 @@ def csv2table(fileName, table):
 
 
 if __name__ == '__main__':
-    pass
+    csvFile = 'trx_his_vm0001752.csv'
+    csv2dict(csvFile)
+    # print(csv2dict(csvFile))
