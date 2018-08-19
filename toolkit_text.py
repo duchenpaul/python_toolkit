@@ -115,7 +115,7 @@ def csv2dict(csv_file):
     '''
     data = pd.read_csv(csv_file, encoding = 'utf-8')
     print(print(data))
-    print(data.to_html())
+    print(data.to_dict())
 
 ########################################################################
 
