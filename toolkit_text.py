@@ -133,7 +133,8 @@ def csv2table(fileName, table):
 def fwf2dict(FILE, widthList):
     '''Transform fixed width file into dict'''
 
-    # Specify "name = [col1, col2, ...]", header = 0 to set the first line as header
+    # Specify header = 0 to set the first line as header
+    # Specify "names = [col1, col2, ...]" to set the header from [col1, col2, ...]
     dataFrame = pd.read_fwf(FILE, header=None, widths=widthList, )
     print(dataFrame)
     return dataFrame.to_dict()
