@@ -26,7 +26,7 @@ except Exception as e:
     sys.exit(1)
 
 
-class _MySQL(object):
+class MySQL(object):
     def __init__(self, host, port, user, passwd, db, charset='utf8'):
         self.conn = MySQLdb.connect(
             host=host,

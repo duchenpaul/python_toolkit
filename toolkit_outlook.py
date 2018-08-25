@@ -4,7 +4,7 @@ import sys
 default_recipients = 'chdu@xx.com'
 
 
-class _Outlook():
+class Outlook():
     def __init__(self):
         app = 'Outlook'
         self.app = win32.gencache.EnsureDispatch("%s.Application" % app)
@@ -39,7 +39,7 @@ class _Outlook():
             mail.HTMLBody = body
         else:
             mail.HTMLBody = body
-        
+
         mail.Send()
         print('Mail sent')
 

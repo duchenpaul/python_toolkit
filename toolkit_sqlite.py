@@ -4,7 +4,7 @@ import sqlite3
 import toolkit_file
 
 
-class _sqlitedb():
+class SqliteDB():
     """docstring for _sqlitedb"""
 
     def __init__(self, DB_FILE):

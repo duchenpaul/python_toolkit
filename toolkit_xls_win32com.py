@@ -6,7 +6,7 @@ import toolkit_file
 import toolkit_xls
 
 
-class _Excel():
+class Excel():
     """docstring for _Excel"""
 
     def __init__(self, xls_file):
