@@ -8,7 +8,7 @@ class _sqlitedb():
     """docstring for _sqlitedb"""
 
     def __init__(self, DB_FILE):
-		self.DB_FILE = DB_FILE
+        self.DB_FILE = DB_FILE
         if toolkit_file.check_file_exists(self.DB_FILE):
             self.conn = sqlite3.connect(self.DB_FILE)
 
