@@ -123,7 +123,7 @@ if __name__ == '__main__':
     drop_table = '''DROP TABLE `work_todo11` '''
     # sqlitedb = _sqlitedb(DB_FILE)
 
-    with _sqlitedb(DB_FILE) as sqlitedb:
+    with SqliteDB(DB_FILE) as sqlitedb:
         # print(sqlitedb.query('select * from Status_sheet'))
         # sqlitedb.execute(create_view)
         pass
