@@ -29,16 +29,11 @@ def encode_base64(data):
 # Regex
 
 
-def regex_find(pattern, string, text):
+def regex_find(pattern, text):
     '''
     return list
     '''
     match_return = re.compile(pattern, re.IGNORECASE).findall(text)
-    if match_return:
-        print('-' * 20)
-        print(pattern + ' detected. ' + 'Count: ' + str(len(match_return)))
-        print(str(match_return), ' -> ', string)
-        print('-' * 20)
     return match_return
 
 
