@@ -1,7 +1,11 @@
 import logging
-import json
 import sqlite3
 import toolkit_file
+
+import json
+import csv
+
+import pandas as pd
 
 
 class SqliteDB():
@@ -106,6 +110,17 @@ class SqliteDB():
 
         self.executemany(insertSql, tupleList)
 
+    def load_csv(self, csvFile, tableName=None):
+        '''
+        Load file into sqlite
+        '''
+        if not tableName:
+            tableName = toolkit_file.get_basename(JSON_FILE)
+        chunks = pd.read_csv(csvFile, chunksize=100000)
+        for chunk in chunks:
+            chunk.to_sql(name=tableName, if_exists='replace', con=self.conn, index=False)
+
+
     def dump_database(self):
         print('Dump database to {}'.format(self.DB_FILE + '.sql'))
         with open(self.DB_FILE + '.sql', 'w', encoding = 'utf-8') as f:
@@ -113,10 +128,12 @@ class SqliteDB():
                 f.write('%s\n' % line)
 
 
+
 if __name__ == '__main__':
     PATH = r'C:\Users\chdu\Desktop\Portal\Other\python_toolkit'
-    DB_FILE = PATH + '\\' + 'ctl_rs_process_sql_test.db'
+    DB_FILE = 'test.db'
     JSON_FILE = PATH + '\\' + 'ctl_rs_process_sql_test.json'
+    csvFile = 'test.csv'
 
     create_view = '''CREATE TABLE IF NOT EXISTS `work_todo11` as select * from Status_sheet '''
     truncate_table = '''DELETE FROM `test` '''
@@ -126,6 +143,6 @@ if __name__ == '__main__':
     with SqliteDB(DB_FILE) as sqlitedb:
         # print(sqlitedb.query('select * from Status_sheet'))
         # sqlitedb.execute(create_view)
-        pass
+        sqlitedb.load_csv(csvFile, tableName=None)
         # sqlitedb.executemany(batch_insert, tupleList)
         # sqlitedb.execute(drop_table)
