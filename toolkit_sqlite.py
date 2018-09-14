@@ -115,8 +115,8 @@ class SqliteDB():
         Load file into sqlite
         '''
         if not tableName:
-            tableName = toolkit_file.get_basename(JSON_FILE)
-        chunks = pd.read_csv(csvFile, chunksize=100000)
+            tableName = toolkit_file.get_basename(csvFile)
+        chunks = pd.read_csv(csvFile, chunksize=100000, dtype=str)
         for chunk in chunks:
             chunk.to_sql(name=tableName, if_exists='replace', con=self.conn, index=False)
 
