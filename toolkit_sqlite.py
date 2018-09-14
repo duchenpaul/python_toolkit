@@ -13,7 +13,7 @@ class SqliteDB():
 
     def __init__(self, DB_FILE):
         self.DB_FILE = DB_FILE
-        if toolkit_file.check_file_exists(self.DB_FILE):
+        if self.DB_FILE == ':memory:' or toolkit_file.check_file_exists(self.DB_FILE):
             self.conn = sqlite3.connect(self.DB_FILE)
 
     def __enter__(self):
