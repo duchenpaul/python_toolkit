@@ -116,7 +116,13 @@ class SqliteDB():
         '''
         if not tableName:
             tableName = toolkit_file.get_basename(csvFile)
-        chunks = pd.read_csv(csvFile, chunksize=100000, dtype=str)
+
+        with open(csvFile, 'r') as f:
+            reader = csv.reader(f)
+            header = next(reader)
+        header = list(map(lambda x: x.strip().replace(' ', '_'), header))
+        # print(header)
+        chunks = pd.read_csv(csvFile, chunksize=100000, dtype=str, names=header, header=0)
         for chunk in chunks:
             chunk.to_sql(name=tableName, if_exists='replace', con=self.conn, index=False)
 
