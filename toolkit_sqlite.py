@@ -133,7 +133,7 @@ if __name__ == '__main__':
     PATH = r'C:\Users\chdu\Desktop\Portal\Other\python_toolkit'
     DB_FILE = 'test.db'
     JSON_FILE = PATH + '\\' + 'ctl_rs_process_sql_test.json'
-    csvFile = 'test.csv'
+    csvFile = 'AHA.csv'
 
     create_view = '''CREATE TABLE IF NOT EXISTS `work_todo11` as select * from Status_sheet '''
     truncate_table = '''DELETE FROM `test` '''

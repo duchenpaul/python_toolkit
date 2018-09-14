@@ -3,6 +3,7 @@ import os.path
 import glob
 from pathlib import Path
 import codecs
+import shutil
 
 def check_file_exists(FILE):
     '''Check if the FILE exists'''
@@ -81,6 +82,17 @@ def convert_encode2utf8(sourceFileName, targetFileName, srcEncoding = 'utf-16'):
                 if not contents:
                     break
                 targetFile.write(contents)
+
+
+def remove_junk_line(FILE, junkwords):
+    '''
+    Remove the line that contains junkwords
+    '''
+    with open(FILE) as oldfile, open(FILE + 'tmp', 'w') as newfile:
+        for line in oldfile:
+            if not junkwords in line:
+                newfile.write(line)
+    shutil.move(FILE + 'tmp', FILE)
 
 if __name__ == '__main__':
     print(get_file_list('E:\\'))
