@@ -122,24 +122,27 @@ class SqliteDB():
             header = next(reader)
         header = list(map(lambda x: x.strip().replace(' ', '_'), header))
         # print(header)
-        chunks = pd.read_csv(csvFile, chunksize=100000, dtype=str, names=header, header=0)
+        drop_SQL = '''DROP TABLE IF EXISTS {}'''.format(tableName)
+        self.execute(drop_SQL)
+        chunks = pd.read_csv(csvFile, chunksize=100000,
+                             dtype=str, names=header, header=0)
         for chunk in chunks:
-            chunk.to_sql(name=tableName, if_exists='replace', con=self.conn, index=False)
-
+            chunk.to_sql(name=tableName, if_exists='append',
+                         con=self.conn, index=False)
 
     def dump_database(self):
         print('Dump database to {}'.format(self.DB_FILE + '.sql'))
-        with open(self.DB_FILE + '.sql', 'w', encoding = 'utf-8') as f:
+        with open(self.DB_FILE + '.sql', 'w', encoding='utf-8') as f:
             for line in self.conn.iterdump():
                 f.write('%s\n' % line)
-
 
 
 if __name__ == '__main__':
     PATH = r'C:\Users\chdu\Desktop\Portal\Other\python_toolkit'
     DB_FILE = 'test.db'
+    # DB_FILE = ':memory:'
     JSON_FILE = PATH + '\\' + 'ctl_rs_process_sql_test.json'
-    csvFile = 'AHA.csv'
+    csvFile = 'carters_LCSummary_20180726073542.csv'
 
     create_view = '''CREATE TABLE IF NOT EXISTS `work_todo11` as select * from Status_sheet '''
     truncate_table = '''DELETE FROM `test` '''
