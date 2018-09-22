@@ -14,6 +14,12 @@ class Outlook():
         self.deletedBox = self.outlookAPI.GetDefaultFolder(
             win32.constants.olFolderDeletedItems)
 
+    def folderPathConvert(self, folderPath):
+        ''' Input folder path seperated by '/'
+            Return folder instance'''
+        toFolderPathStr = 'self.inbox' + ''.join(['''.Folders['{}']'''.format(i) for i in folderPath.split('/') if i])
+        return eval(toFolderPathStr)
+
     def send_mail(self, subj, body, recipients=['chdu@merkleinc.com'], attachment_path=None, mail_type = 'PlainText'):
         '''
         Attachment can be list or string
@@ -58,7 +64,7 @@ class Outlook():
             # Fetch inbox
             folder = self.outlookAPI.GetDefaultFolder(6)
         else:
-            folder = self.inbox.Folders[folderName]
+            folder = self.folderPathConvert(folderName)
 
         # folder = self.inbox.Folders[folderName]
         messages = folder.Items
@@ -66,23 +72,23 @@ class Outlook():
 
     def fetch_mail(self, folderName = 'INBOX', subject = 'keywords'):
         '''
-        Fetch the subject of mail in a folder
+        Fetch the HTMLBody of mail in a folder
         '''
         if folderName.upper() == 'INBOX':
             # Fetch inbox
             folder = self.outlookAPI.GetDefaultFolder(6)
         else:
-            folder = self.inbox.Folders[folderName]
+            folder = self.folderPathConvert(folderName)
 
         # folder = self.inbox.Folders[folderName]
         messages = folder.Items
-        return [message.HTMLBody for message in messages if message.Subject == subject]
+        return [message.HTMLBody for message in messages if subject in message.Subject]
 
     def empty_folder(self, folderName):
         '''
         Put all mails in the folder into deleted box
         '''
-        folder = self.inbox.Folders[folderName]
+        folder = self.folderPathConvert(folderName)
         messages = folder.Items
         deletedItem = ['init']
         while len(deletedItem):
@@ -111,7 +117,7 @@ class Outlook():
         print("Purge done")
 
 
-outlook = _Outlook()
+outlook = Outlook()
 
 
 def outlook_send_mail(subj, body, recipients=[default_recipients], attachment_path=None):
