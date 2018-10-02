@@ -8,6 +8,9 @@ from email.mime.base import MIMEBase
 from email import encoders
 import getopt
 from os.path import basename
+import socket
+HOSTNAME = socket.gethostname()
+
 import toolkit_config
 
 
@@ -36,7 +39,8 @@ class Smtp():
     def send_mail(self, subject, content, attach_file=None):
         msg = MIMEMultipart()
         msg['Subject'] = subject
-        msg['From'] = self.EMAIL_ACCOUNT
+        # msg['From'] = self.EMAIL_ACCOUNT
+        msg['From'] = '{0}  <{1}>'.format(HOSTNAME, self.EMAIL_ACCOUNT)
         if type(self.DISTRI_LIST) is list:
             msg['To'] = ', '.join(self.DISTRI_LIST)
         else:
