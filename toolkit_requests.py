@@ -1,5 +1,11 @@
 '''A template for sending requests to websites'''
 import requests
+import urllib.parse
+try:
+    from urllib.parse import quote_plus
+except ImportError:
+    from urllib import quote_plus
+
 
 url = 'http://example.com/'
 
@@ -13,11 +19,12 @@ class Example():
 
     def webpage_get(self, url, headers=dict(), allow_redirects=True):
         # print("Get: " + url)
-        self.resp = self.sess.get(url, headers=headers, allow_redirects=allow_redirects)
+        self.resp = self.sess.get(url, headers=headers, allow_redirects=allow_redirects, verify=False)
+        # print(self.resp.content.decode('utf-8').replace('\r\n', '\n'))
         return self.resp
 
     def webpage_post(self, url, data, headers=dict()):
-        self.sess.post(url, data=data, headers=headers)
+        self.resp = self.sess.post(url, data=data, headers=headers, verify=False)
         # self.req = requests.Request('POST', url, data=data, headers=headers)
         # self.prepped = self.sess.prepare_request(self.req)
         # self.resp = self.sess.send(self.prepped)
@@ -44,8 +51,16 @@ class Example():
             'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
         }
         self.resp = self.webpage_get(self.url, headers=headers, allow_redirects=True)
-        print(self.resp.content.decode('utf-8').replace('\r\n', '\n'))
-
+        
+        postDataDict = {
+            'username': self.username,
+            'password': self.password,
+            'url': 'http://club.mail.126.com/jifen/index.do',
+            'm-URSlogin-box-form-url2': 'http://club.mail.126.com/jifen/index.do',
+        }
+        post_data = urllib.parse.urlencode(postDataDict)
+        print(post_data)
+        self.resp = self.webpage_post(url, post_data, headers=headers)
 
 if __name__ == '__main__':
     username, password = 'username', 'password'
