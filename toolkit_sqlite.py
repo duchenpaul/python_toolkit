@@ -110,7 +110,7 @@ class SqliteDB():
 
         self.executemany(insertSql, tupleList)
 
-    def load_csv(self, csvFile, tableName=None):
+    def load_csv(self, csvFile, tableName=None, delimiter=','):
         '''
         Load file into sqlite
         '''
@@ -118,13 +118,13 @@ class SqliteDB():
             tableName = toolkit_file.get_basename(csvFile)
 
         with open(csvFile, 'r') as f:
-            reader = csv.reader(f)
+            reader = csv.reader(f, delimiter=delimiter)
             header = next(reader)
         header = list(map(lambda x: x.strip().replace(' ', '_'), header))
         # print(header)
         drop_SQL = '''DROP TABLE IF EXISTS {}'''.format(tableName)
         self.execute(drop_SQL)
-        chunks = pd.read_csv(csvFile, chunksize=100000,
+        chunks = pd.read_csv(csvFile, chunksize=100000, sep=delimiter,
                              dtype=str, names=header, header=0)
         for chunk in chunks:
             chunk.to_sql(name=tableName, if_exists='append',
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     DB_FILE = 'test.db'
     # DB_FILE = ':memory:'
     JSON_FILE = PATH + '\\' + 'ctl_rs_process_sql_test.json'
-    csvFile = 'carters_LCSummary_20180726073542.csv'
+    csvFile = 'SMGE_20170320.txt'
 
     create_view = '''CREATE TABLE IF NOT EXISTS `work_todo11` as select * from Status_sheet '''
     truncate_table = '''DELETE FROM `test` '''
@@ -152,6 +152,6 @@ if __name__ == '__main__':
     with SqliteDB(DB_FILE) as sqlitedb:
         # print(sqlitedb.query('select * from Status_sheet'))
         # sqlitedb.execute(create_view)
-        sqlitedb.load_csv(csvFile, tableName=None)
+        sqlitedb.load_csv(csvFile, tableName=None, delimiter='\t')
         # sqlitedb.executemany(batch_insert, tupleList)
         # sqlitedb.execute(drop_table)
