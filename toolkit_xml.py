@@ -11,7 +11,7 @@ def xml_minify(xml_str):
     return etree.tostring(elem, xml_declaration=True, encoding='utf-8').decode().replace('\n', '')
 
 
-def xml2json(xmlString):
+def xml2dict(xmlString):
     '''Return json object'''
     jsonString = json.dumps(xmltodict.parse(xmlString), indent=4)
     xml_in_json = json.loads(jsonString)
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     xmlsample = 'api_export/getListformated_sample.xml'
 
     xmlString = open(xmlsample, encoding = 'utf-8').read()
-    xmlsamplejson = xml2json(xmlString)
+    xmlsamplejson = xml2dict(xmlString)
     update_date = xmlsamplejson['feed']['modified']
 
     # with open('api_export/test.json', 'w') as f:
