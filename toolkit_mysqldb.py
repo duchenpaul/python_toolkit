@@ -14,11 +14,11 @@ try:
     configRead = configparser.ConfigParser()
     configRead.read(config_file)
     config = {
-        'host': configRead['datebase']['host'],
-        'port': int(configRead['datebase']['port']),
-        'user': configRead['datebase']['user'],
-        'passwd': configRead['datebase']['passwd'],
-        'db': configRead['datebase']['db'],
+        'host': configRead['database']['host'],
+        'port': int(configRead['database']['port']),
+        'user': configRead['database']['user'],
+        'passwd': configRead['database']['passwd'],
+        'db': configRead['database']['db'],
         'charset': 'utf8'
     }
 except Exception as e:

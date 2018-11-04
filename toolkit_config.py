@@ -52,11 +52,11 @@ def read_config_mysql(configFile=config_file):
         configRead = configparser.ConfigParser()
         configRead.read(configFile)
         config = {
-            'host': configRead['datebase']['host'],
-            'port': int(configRead['datebase']['port']),
-            'user': configRead['datebase']['user'],
-            'passwd': configRead['datebase']['passwd'],
-            'db': configRead['datebase']['db'],
+            'host': configRead['database']['host'],
+            'port': int(configRead['database']['port']),
+            'user': configRead['database']['user'],
+            'passwd': configRead['database']['passwd'],
+            'db': configRead['database']['db'],
             'charset': 'utf8'
         }
     except Exception as e:
