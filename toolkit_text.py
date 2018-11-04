@@ -108,7 +108,7 @@ def csv2dict(csv_file):
     Iutput: csv file
     Onput: dictList
     '''
-    dataFrame = pd.read_csv(csv_file, encoding = 'utf-8', header = 0)
+    dataFrame = pd.read_csv(csv_file, encoding='utf-8', header=0)
     # print(data.to_dict())
     dict_list = []
     for i in dataFrame.index:
@@ -135,10 +135,36 @@ def fwf2dict(FILE, widthList):
     return dataFrame.to_dict()
 
 
+########################################################################
+
+
+def convert_to_Byte(value):
+    '''Convert KB, MB, GB into Byte'''
+    UNIT_SET = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+    for i, c in enumerate(value):
+        if c not in '0123456789-.':
+            break
+    number = float(value[:i])
+    unit = value[i:]
+    inByte = number * 1024 ** UNIT_SET.index(unit)
+    return int(inByte)
+
+
+def convert_Bytes(size):
+    '''Convert Byte into KB, MB, GB'''
+    power = 2**10
+    n = 0
+    Dic_powerN = {0: 'B', 1: 'KB', 2: 'MB', 3: 'GB', 4: 'TB'}
+    while size > power:
+        size /= power
+        n += 1
+    return '{}{}'.format(round(size, 2), Dic_powerN[n])
+
+
 if __name__ == '__main__':
-    x = fwf2dict('test.txt', [8, 16, 16, 12, 14, 16, 7,])
+    x = fwf2dict('test.txt', [8, 16, 16, 12, 14, 16, 7, ])
     print(x)
 
     # _ = csv2dict('FL_insurance_sample.csv')
     # print(_)
-#  'Account', 'LastName', 'FirstName', 'Balance', 'CreditLimit', 'AccountCreated', 'Rating', 
+#  'Account', 'LastName', 'FirstName', 'Balance', 'CreditLimit', 'AccountCreated', 'Rating',
