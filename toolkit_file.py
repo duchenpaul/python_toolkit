@@ -48,12 +48,12 @@ def get_file_list(folder):
     return file_list
 
 
-def purge_folder(folder):
+def purge_folder(folder, filePattern='*'):
     # filelist = [ f for f in os.listdir(folder) ] #if f.endswith(".bak") ]
-    filelist = glob.glob(folder + os.sep + '*')
+    filelist = glob.glob(folder + os.sep + filePattern)
     for f in filelist:
-        print(f)
-        # os.remove(os.path.join(f)) # using glob
+        # print(f)
+        os.remove(os.path.join(f)) # using glob
         # os.remove(os.path.join(folder, f)) # using listdir
 
 
