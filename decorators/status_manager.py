@@ -1,28 +1,26 @@
 from datetime import datetime
-import sys
-import os
+import sys, os
 
 import toolkit_sqlite
 
 DB_FILE = 'test.db'
 
+def insert_status(scriptName, loadName, status, duration, method='ins'):
+    UPDATE_DATE = datetime.now().strftime('%F %X')
+    if method == 'ins':
+        update_sql = '''INSERT INTO update_history VALUES ('{SCRIPT_NAME}', '{LOAD_NAME}', '{STATUS}', '{DURATION}', '{UPDATE_DATE}');'''.format(
+            SCRIPT_NAME=scriptName, LOAD_NAME=loadName, STATUS=status, UPDATE_DATE=UPDATE_DATE, DURATION=duration)
+    elif method == 'upd':
+        update_sql = '''UPDATE update_history SET STATUS = '{STATUS}',
+                               DURATION = '{DURATION}',
+                               UPDATE_DATE = '{UPDATE_DATE}'
+                         WHERE STATUS = 'RUNNING' AND SCRIPT_NAME= '{SCRIPT_NAME}' AND LOAD_NAME= '{LOAD_NAME}';'''.format(
+            SCRIPT_NAME=scriptName, LOAD_NAME=loadName, STATUS=status, UPDATE_DATE=UPDATE_DATE, DURATION=duration)
+
+    with toolkit_sqlite.SqliteDB(DB_FILE) as sqlitedb:
+        sqlitedb.execute(update_sql)
 
 def logging_status(func):
-    def insert_status(scriptName, loadName, status, duration, method='ins'):
-        UPDATE_DATE = datetime.now().strftime('%F %X')
-        if method == 'ins':
-            update_sql = '''INSERT INTO update_history VALUES ('{SCRIPT_NAME}', '{LOAD_NAME}', '{STATUS}', '{DURATION}', '{UPDATE_DATE}');'''.format(
-                SCRIPT_NAME=scriptName, LOAD_NAME=loadName, STATUS=status, UPDATE_DATE=UPDATE_DATE, DURATION=duration)
-        elif method == 'upd':
-            update_sql = '''UPDATE update_history SET STATUS = '{STATUS}',
-                                   DURATION = '{DURATION}',
-                                   UPDATE_DATE = '{UPDATE_DATE}'
-                             WHERE STATUS = 'RUNNING' AND SCRIPT_NAME= '{SCRIPT_NAME}' AND LOAD_NAME= '{LOAD_NAME}';'''.format(
-                SCRIPT_NAME=scriptName, LOAD_NAME=loadName, STATUS=status, UPDATE_DATE=UPDATE_DATE, DURATION=duration)
-
-        with toolkit_sqlite.SqliteDB(DB_FILE) as sqlitedb:
-            sqlitedb.execute(update_sql)
-
     def wrapper(*args, **kwargs):
         loadName = func.__name__
         scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
