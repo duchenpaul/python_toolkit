@@ -10,8 +10,12 @@
 ### Above combination will ignore all files without extension ###
 
 **/__pycache__
+**/*.pyc
+
+**/*.db
+**/*.csv
+**/*.log
+
 
 *test*
 config.ini
-*.db
-*.csv
