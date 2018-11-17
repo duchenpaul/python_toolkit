@@ -75,9 +75,11 @@ class Smtp():
             # print(msg.as_string())
             server.sendmail(self.EMAIL_ACCOUNT,
                             self.DISTRI_LIST, msg.as_string())
-            print("Mail sent")
         except Exception as e:
             print('Failed to send mail: ' + str(e))
+            raise
+        else:
+            print("Mail sent")
         finally:
             server.quit()
 
