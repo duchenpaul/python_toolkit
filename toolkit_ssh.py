@@ -29,15 +29,17 @@ class SSHConnection(object):
                           password=self._password, pkey=self._pkey)
         self._transport = transport
 
-    def download(self, remotepath, localpath):
+    def get(self, remoteFile, localFile):
+        '''Specify localfile and remotefile'''
         if self._sftp is None:
             self._sftp = paramiko.SFTPClient.from_transport(self._transport)
-        self._sftp.get(remotepath, localpath)
+        self._sftp.get(remoteFile, localFile)
 
-    def put(self, localpath, remotepath):
+    def put(self, localFile, remoteFile):
+        '''Specify localfile and remotefile'''
         if self._sftp is None:
             self._sftp = paramiko.SFTPClient.from_transport(self._transport)
-        self._sftp.put(localpath, remotepath)
+        self._sftp.put(localFile, remoteFile)
 
     def exec_command(self, command):
         if self._client is None:
