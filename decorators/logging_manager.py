@@ -1,4 +1,4 @@
-import functools
+# import functools
 import logging
 from datetime import datetime
 import os
@@ -58,8 +58,7 @@ def logging_to_file(func):
             x = func(*args, **kwargs)
         except:
             # log the exception
-            err = "There was an exception in "
-            err += func.__name__
+            err = "There was an exception in {}".format(func.__name__)
             logger.exception(err)
 
             # re-raise the exception
