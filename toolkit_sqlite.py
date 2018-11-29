@@ -86,31 +86,25 @@ class SqliteDB():
             print('affected_rows: ' + str(affected_rows))
         return affected_rows
 
-    def load_json(self, JSON_FILE, tableName=None):
+    def load_json(self, JSON_FILE, tableName=None, full_refresh=True):
         '''
         Load file into sqlite
         '''
         if not tableName:
             tableName = toolkit_file.get_basename(JSON_FILE)
 
-        with open(JSON_FILE, 'r') as f:
-            dicSet = json.load(f)
+        with open(JSON_FILE, 'r', errors = 'ignore') as f:
+            dicSet = json.load(f)["rows"]
 
-        print('Load json {} to table {}'.format(JSON_FILE, tableName))
-        tupleList = []
-        columnNames = list(dicSet[0].keys())
-        columnNamesSqlJoined = ', '.join(
-            map(lambda x: '`' + x + '`', columnNames))
+        if full_refresh:
+            drop_SQL = '''DROP TABLE IF EXISTS {}'''.format(tableName)
+            self.execute(drop_SQL)
 
-        for dic in dicSet:
-            tupleList.append(tuple(dic.values()))
+        df = pd.DataFrame(dicSet)
+        df.to_sql(name=tableName, if_exists='append',
+                         con=self.conn, index=False, chunksize=20000)
 
-        insertSql = "INSERT INTO {} ({}) VALUES(?{});".format(
-            tableName, columnNamesSqlJoined, ',?' * (len(tupleList[0]) - 1))
-
-        self.executemany(insertSql, tupleList)
-
-    def load_csv(self, csvFile, tableName=None, delimiter=','):
+    def load_csv(self, csvFile, tableName=None, delimiter=',', full_refresh=True):
         '''
         Load file into sqlite
         '''
@@ -122,8 +116,10 @@ class SqliteDB():
             header = next(reader)
         header = list(map(lambda x: x.strip().replace(' ', '_'), header))
         # print(header)
-        drop_SQL = '''DROP TABLE IF EXISTS {}'''.format(tableName)
-        self.execute(drop_SQL)
+        if full_refresh:
+            drop_SQL = '''DROP TABLE IF EXISTS {}'''.format(tableName)
+            self.execute(drop_SQL)
+            
         chunks = pd.read_csv(csvFile, chunksize=100000, sep=delimiter,
                              dtype=str, names=header, header=0)
         for chunk in chunks:
