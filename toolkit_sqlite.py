@@ -41,6 +41,7 @@ class SqliteDB():
     def query(self, sql):
         self.cursor = self.conn.cursor()
         try:
+            logging.debug('Execute: {}'.format(sql))
             self.cursor.execute(sql)
             result = self.cursor.fetchall()
         except Exception as e:
