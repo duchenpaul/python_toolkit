@@ -40,7 +40,7 @@ def logging_to_file(func):
     A decorator that wraps the passed in func and logs 
     exceptions should one occur
 
-    @param logger: The logging object
+    @logging_manager.logging_to_file
     """
     # @functools.wraps(func)
     def wrapper(*args, **kwargs):
