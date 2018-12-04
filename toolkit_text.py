@@ -48,11 +48,11 @@ def regex_replace_file(FILENAME, pattern, string, exception=None):
     '''
     Replace the regex pattern with string of a file, except exceptions
     '''
+    import logging
     with open(FILENAME, 'r') as f:
         text = f.read()
-
     if exception and re.compile(exception, re.IGNORECASE).findall(text):
-        print(" - Skip " + exception)
+        logging.debug(" - Skip " + exception)
         return
     with open(FILENAME, 'w') as f:
         f.write(re.sub(pattern, string, text, flags=re.IGNORECASE))
@@ -120,18 +120,12 @@ def csv2dict(csv_file):
 
 ########################################################################
 
-
-def csv2table(fileName, table):
-    pass
-
-
 def fwf2dict(FILE, widthList):
     '''Transform fixed width file into dict'''
 
     # Specify header = 0 to set the first line as header
     # Specify "names = [col1, col2, ...]" to set the header from [col1, col2, ...]
     dataFrame = pd.read_fwf(FILE, header=None, widths=widthList, )
-    print(dataFrame)
     return dataFrame.to_dict()
 
 

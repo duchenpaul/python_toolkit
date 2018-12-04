@@ -3,6 +3,7 @@ import email
 import datetime
 import re
 import os
+import logging
 import toolkit_config
 
 config = toolkit_config.read_config_mail('config.ini')
@@ -19,10 +20,10 @@ class Imap():
             # Default select INBOX folder
             self.con.select('"INBOX"')
         except imaplib.IMAP4.error:
-            print("LOGIN FAILED!!! ")
+            logging.error("LOGIN FAILED!!! ")
             raise
         else:
-            print(rv, data)
+            logging.info(rv, data)
 
     def __enter__(self):
         return self
@@ -31,7 +32,7 @@ class Imap():
         '''
         Executed after "with"
         '''
-        print('Close the imap connection')
+        logging.info('Close the imap connection')
         self.con.close()
 
     def get_mail_folder(self):
@@ -41,7 +42,7 @@ class Imap():
             # print(mailboxes)
 
             # get inbox alias
-            print(mailboxes)
+            logging.debug(mailboxes)
 
             def g(i): return re.compile(r'(?<=" )(.*)',
                                         re.IGNORECASE).findall(i.decode('utf-8'))[0]
@@ -56,14 +57,14 @@ class Imap():
         # self.con.store(mail_num, '-FLAGS', '\\Seen')
 
     def delete_mail(self, mail_num):
-        print("Delete mail {}".format(self.get_mail_subject(mail_num)))
+        logging.info("Delete mail {}".format(self.get_mail_subject(mail_num)))
         self.con.store(mail_num, '+FLAGS', '\\Deleted')
         self.con.expunge()
 
     def get_mail_subject(self, mail_num):
         rv, mail_data_bin = self.con.fetch(mail_num, '(RFC822)')
         if rv != 'OK':
-            print("ERROR getting message", mail_num)
+            logging.error("ERROR getting message", mail_num)
             return
         # Fetch again if the mail not fetched
         mail_data_raw = mail_data_bin[0][1].decode(
@@ -74,7 +75,7 @@ class Imap():
     def download_attachment(self, mail_num):
         rv, mail_data_bin = self.con.fetch(mail_num, '(RFC822)')
         if rv != 'OK':
-            print("ERROR getting message", mail_num)
+            logging.error("ERROR getting message", mail_num)
             return
         # Fetch again if the mail not fetched
         mail_data_raw = mail_data_bin[0][1].decode(
@@ -98,21 +99,22 @@ class Imap():
                 fileFolder = detach_dir + os.sep + 'attachments'
                 filePath = fileFolder + os.sep + fileName
                 if not os.path.isfile(filePath):
-                    print('Saving {} to {}...'.format(fileName, filePath))
+                    logging.info('Saving {} to {}...'.format(
+                        fileName, filePath))
                     with open(filePath, 'wb') as fp:
                         fp.write(part.get_payload(decode=True))
                 else:
-                    print('Same file {} found, skip.'.format(filePath))
+                    logging.info('Same file {} found, skip.'.format(filePath))
 
     def get_mail_num(self, mailFolder):
         '''
         Fetch the mail index in a mail folder
         '''
         # mailFolder = '"{}"'.format(mailFolder)
-        print("Processing mailbox {}...\n".format(mailFolder))
+        logging.info("Processing mailbox {}...\n".format(mailFolder))
         rv, data = self.con.select(mailFolder)
         if rv != 'OK':
-            print("ERROR: Unable to open mailbox ", rv)
+            logging.error("ERROR: Unable to open mailbox ", rv)
             return
         rv, data = self.con.search(None, "ALL")
         return data[0].split()
@@ -126,27 +128,26 @@ class Imap():
     def walk_mail_folder(self, mailFolder):
         rv, data = self.con.select(mailFolder)
         if rv != 'OK':
-            print("ERROR: Unable to open mailbox ", rv)
+            logging.error("ERROR: Unable to open mailbox ", rv)
             return
-        print("Processing mailbox {}...\n".format(mailFolder))
+        logging.info("Processing mailbox {}...\n".format(mailFolder))
         rv, data = self.con.search(None, "ALL")
-
-        print(data)
-        print('-' * 90)
+        logging.info(data)
+        logging.info('-' * 90)
         for mail_num in data[0].split():
             rv, mail_data_bin = self.con.fetch(mail_num, '(RFC822)')
             if rv != 'OK':
-                print("ERROR getting message", mail_num)
+                logging.error("ERROR getting message", mail_num)
                 return
             mail_data_raw = mail_data_bin[0][1].decode(
                 'utf-8').replace('\r\n', '\n')
             # print(mail_data_raw)
             self.email_message = email.message_from_string(mail_data_raw)
-            print(mail_num.decode('utf-8') + ': ' +
-                  self.email_message['Subject'])
+            logging.info(mail_num.decode('utf-8') + ': ' +
+                         self.email_message['Subject'])
             # print(email.utils.parseaddr(self.email_message['To']))
             # print(self.email_message.items())
-            print('x' * 90)
+            logging.info('x' * 90)
 
     def mark_all_mail_read(self):
         for mailbox in self.get_mail_folder():
