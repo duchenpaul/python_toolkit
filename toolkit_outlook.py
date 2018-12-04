@@ -1,5 +1,6 @@
 import win32com.client as win32
 import sys
+import logging
 
 default_recipients = 'chdu@xx.com'
 
@@ -28,6 +29,10 @@ class Outlook():
         print("Subject: " + subj)
         print("Body: " + body)
         print("Send to: " + str(recipients))
+        
+        logging.info("Subject: " + subj)
+        logging.info("Body: " + body)
+        logging.info("Send to: " + str(recipients))
         mail = self.app.CreateItem(win32.constants.olMailItem)
         for i in recipients:
             mail.Recipients.Add(i)
@@ -37,7 +42,7 @@ class Outlook():
                 mail.Attachments.Add(Source=attachment_path)
             elif type(attachment_path) is list:
                 for i in attachment_path:
-                    print('Add {} as attachment'.format(i))
+                    logging.info('Add {} as attachment'.format(i))
                     mail.Attachments.Add(Source=i)
 
         mail.Subject = subj
@@ -45,9 +50,13 @@ class Outlook():
             mail.HTMLBody = body
         else:
             mail.HTMLBody = body
-
-        mail.Send()
-        print('Mail sent')
+        try:
+            mail.Send()
+        except Exception as e:
+            logging.error('Failed to send email!')
+        else:
+            print('Mail sent')
+            logging.info('Mail sent')
 
     def fetch_inbox_folders(self):
         '''
@@ -94,12 +103,12 @@ class Outlook():
         while len(deletedItem):
             deletedItem = []
             for message in messages:
-                print('Delete {}'.format(message.Subject))
+                logging.info('Delete {}'.format(message.Subject))
                 deletedItem.append(message.Subject)
                 try:
                     message.Delete()
                 except Exception as e:
-                    print("Err, try again")
+                    logging.error("Err, try again")
                     self.empty_folder(folderName)
 
     def empty_junkbox(self):
@@ -112,9 +121,9 @@ class Outlook():
             for i in self.deletedBox.Items:
                 deletedItem.append(i.Subject)
                 i.Delete()
-            print('Deleted {} mails'.format(len(deletedItem)))
+            logging.info('Deleted {} mails'.format(len(deletedItem)))
 
-        print("Purge done")
+        logging.info("Purge done")
 
 
 outlook = Outlook()

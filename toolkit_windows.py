@@ -5,6 +5,7 @@ import time
 import cv2
 from PIL import ImageGrab
 
+import logging
 WINDOW_TITLE = "Chrome"
 
 # Get the coordinate of the window (up left)
@@ -14,13 +15,13 @@ def getGameWindowPosition(WINDOW_TITLE):
     # FindWindow(lpClassName=None, lpWindowName=None)
     window = win32gui.FindWindow(None, WINDOW_TITLE)
     while not window:
-        print('Failed to navigate the windows, wait 5s...')
+        logging.info('Failed to navigate the windows, wait 5s...')
         time.sleep(5)
         window = win32gui.FindWindow(None, WINDOW_TITLE)
 
     win32gui.SetForegroundWindow(window)  # Put the window to the top
     pos = win32gui.GetWindowRect(window)
-    print("Got window" + str(pos))
+    logging.info("Got window" + str(pos))
     return (pos[0], pos[1])
 
 

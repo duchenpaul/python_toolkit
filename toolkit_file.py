@@ -5,6 +5,8 @@ from pathlib import Path
 import codecs
 import shutil
 
+import logging
+
 def check_file_exists(FILE):
     '''Check if the FILE exists'''
     return Path(FILE).is_file()
@@ -61,7 +63,7 @@ def create_folder(folderName):
     '''Create folder if not exists'''
     my_file = Path(folderName)
     if not my_file.is_dir():
-        print('Folder {} not found, creating a new one'.format(folderName))
+        logging.info('Folder {} not found, creating a new one'.format(folderName))
         os.mkdir(folderName)
 
 
@@ -95,4 +97,4 @@ def remove_junk_line(FILE, junkwords):
     shutil.move(FILE + 'tmp', FILE)
 
 if __name__ == '__main__':
-    print(get_file_list('E:\\'))
+    print(create_folder(r'C:\Users\chdu\Downloads\sf'))

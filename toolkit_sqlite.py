@@ -7,7 +7,6 @@ import csv
 
 import pandas as pd
 
-
 class SqliteDB():
     """docstring for _sqlitedb"""
 
@@ -24,19 +23,19 @@ class SqliteDB():
         Executed after "with"
         '''
         if hasattr(self, 'self.cursor'):
-            print('Close the DB')
+            logging.info('Close the DB')
             self.cursor.close()
 
     def create_database(self, SQLFile):
         '''Create a new database using deploy SQLFile'''
         if not toolkit_file.check_file_exists(self.DB_FILE):
-            print('Deploy {} to {}'.format(SQLFile, self.DB_FILE))
+            logging.info('Deploy {} to {}'.format(SQLFile, self.DB_FILE))
             self.conn = sqlite3.connect(self.DB_FILE)
             self.cursor = self.conn.cursor()
             with open(SQLFile) as f:
                 self.cursor.executescript(f.read())
         else:
-            print('{} exists'.format(self.DB_FILE))
+            logging.info('{} exists'.format(self.DB_FILE))
 
     def query(self, sql):
         self.cursor = self.conn.cursor()
@@ -63,7 +62,7 @@ class SqliteDB():
             logging.error("sqlite execute error: %s", e)
             return 0
         finally:
-            print('affected_rows: ' + str(affected_row))
+            logging.info('affected_rows: ' + str(affected_row))
             self.cursor.close()
         return affected_row
 
@@ -84,7 +83,7 @@ class SqliteDB():
             return 0
         finally:
             self.cursor.close()
-            print('affected_rows: ' + str(affected_rows))
+            logging.info('affected_rows: ' + str(affected_rows))
         return affected_rows
 
     def load_json(self, JSON_FILE, tableName=None, full_refresh=True):
@@ -128,7 +127,7 @@ class SqliteDB():
                          con=self.conn, index=False)
 
     def dump_database(self):
-        print('Dump database to {}'.format(self.DB_FILE + '.sql'))
+        logging.info('Dump database to {}'.format(self.DB_FILE + '.sql'))
         with open(self.DB_FILE + '.sql', 'w', encoding='utf-8') as f:
             for line in self.conn.iterdump():
                 f.write('%s\n' % line)

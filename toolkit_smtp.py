@@ -9,10 +9,11 @@ from email import encoders
 import getopt
 from os.path import basename
 import socket
-HOSTNAME = socket.gethostname()
 
+import logging
 import toolkit_config
 
+HOSTNAME = socket.gethostname()
 
 # Usage: python send_an_email_with_attachment.py subject content (-f FILEPATH -r "RECIPIENT_1@gmail.com,RECIPIENT_2@gmail.com")
 
@@ -57,28 +58,31 @@ class Smtp():
                     part.add_header('Content-Disposition',
                                     'attachment', filename=file_name)
                     msg.attach(part)
-                    print('Attached file {}'.format(file))
+                    logging.info('Attached file {}'.format(file))
                 except Exception as e:
-                    print("could not attach file")
+                    logging.info("could not attach file")
 
         body = ''.join(content)
         body = body.replace('\n', '<br />')
         msg.attach(MIMEText('<html><body>' + body +
                             '</body></html>', 'html', 'utf-8'))
-
         try:
             server = smtplib.SMTP(self.SMTP_SERVER)
             server.starttls()
             server.login(self.EMAIL_ACCOUNT, self.EMAIL_PASSWORD)
+            logging.info('Send mail to {}'.format(msg['To']))
+            logging.info('Subject: {}'.format(msg['Subject']))
+
             print('Send mail to {}'.format(msg['To']))
             print('Subject: {}'.format(msg['Subject']))
             # print(msg.as_string())
             server.sendmail(self.EMAIL_ACCOUNT,
                             self.DISTRI_LIST, msg.as_string())
         except Exception as e:
-            print('Failed to send mail: ' + str(e))
+            logging.error('Failed to send mail: ' + str(e))
             raise
         else:
+            logging.info("Mail sent")
             print("Mail sent")
         finally:
             server.quit()
