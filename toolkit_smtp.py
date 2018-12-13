@@ -21,8 +21,9 @@ config.pop('IMAP_SERVER')
 
 
 class Smtp():
-    """Send mail if DISTRI_LIST is None, send mail to myself
-            DISTRI_LIST example: a@mail.com, b@gmail.com
+    """Send email
+    If DISTRI_LIST is None, send mail to myself
+    DISTRI_LIST example: a@mail.com, b@gmail.com
     """
 
     def __init__(self, SMTP_SERVER, EMAIL_ACCOUNT, EMAIL_PASSWORD, DISTRI_LIST=None):
