@@ -10,7 +10,7 @@ config_file = os.path.dirname(
     os.path.realpath(__file__)) + os.sep + 'config.ini'
 
 try:
-    print('Read config file: ' + config_file)
+    logging.debug('Read config file: ' + config_file)
     configRead = configparser.ConfigParser()
     configRead.read(config_file)
     config = {
@@ -22,7 +22,7 @@ try:
         'charset': 'utf8'
     }
 except Exception as e:
-    print("Error read config file, check config.ini")
+    logging.error("Error read config file, check config.ini")
     sys.exit(1)
 
 
@@ -78,7 +78,7 @@ class MySQL(object):
             return 0
         finally:
             cursor.close()
-            print('affected_rows: ' + str(affected_row))
+            logging.info('affected_rows: ' + str(affected_row))
         return affected_row
 
     def executemany(self, sql, params=None):
@@ -93,7 +93,7 @@ class MySQL(object):
             return 0
         finally:
             cursor.close()
-            print('affected_rows: ' + str(affected_rows))
+            logging.info('affected_rows: ' + str(affected_rows))
         return affected_rows
 
     def close(self):
@@ -106,7 +106,7 @@ class MySQL(object):
         self.close()
 
 
-mysql = _MySQL(**config)
+mysql = MySQL(**config)
 
 
 def execute_sql(sql_stmt):
