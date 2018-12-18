@@ -25,10 +25,12 @@ def get_basename(FILE):
 
 
 def file_path(FILE):
+    '''Return the path of the folder where the FILE locates'''
     return os.path.dirname(os.path.realpath(FILE)) + os.sep
 
 
 def script_path():
+    '''Return the path of the current script'''
     return os.path.dirname(os.path.realpath(__file__))
 
 
@@ -43,6 +45,7 @@ def line_prepender(filename, line):
 
 
 def get_file_list(folder):
+    '''Return the list of file of the folder'''
     file_list = []
     for path, subdirs, files in os.walk(folder):
         for name in files:
@@ -51,6 +54,7 @@ def get_file_list(folder):
 
 
 def purge_folder(folder, filePattern='*'):
+    '''Empty everything in the folder'''
     # filelist = [ f for f in os.listdir(folder) ] #if f.endswith(".bak") ]
     filelist = glob.glob(folder + os.sep + filePattern)
     for f in filelist:
@@ -76,6 +80,7 @@ def text_replace_in_file(pattern, string, file):
 
 
 def convert_encode2utf8(sourceFileName, targetFileName, srcEncoding = 'utf-16'):
+    '''Save the file with encoding of utf-8'''
     BLOCKSIZE = 1048576 # or some other, desired size in bytes
     with codecs.open(sourceFileName, 'r', 'utf-16') as sourceFile:
         with codecs.open(targetFileName, 'w', 'utf-8') as targetFile:
@@ -97,4 +102,4 @@ def remove_junk_line(FILE, junkwords):
     shutil.move(FILE + 'tmp', FILE)
 
 if __name__ == '__main__':
-    print(create_folder(r'C:\Users\chdu\Downloads\sf'))
+    print(file_path(r'C:\Users\chdu\Downloads\sf'))
