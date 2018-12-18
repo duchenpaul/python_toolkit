@@ -9,11 +9,12 @@ import inspect
 
 def now(): return datetime.now().strftime('%F %X')
 
+logFileName = 'log_{}.log'.format(datetime.now().strftime('%F'))
 
 scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
 LOG_FORMAT = '[%(asctime)s] %(levelname)8s - %(name)s - %(message)s'
 # LOG_FORMAT = logging.Formatter(LOG_FORMAT, '%Y-%m-%d %H:%M:%S')
-logging.basicConfig(filename='log_{}.log'.format(datetime.now().strftime('%F')),
+logging.basicConfig(filename=logFileName,
                     level=logging.DEBUG,
                     format=LOG_FORMAT,
                     datefmt='%F %X',
