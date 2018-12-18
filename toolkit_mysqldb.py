@@ -1,29 +1,10 @@
-import logging
 import MySQLdb
-import configparser
 import csv
 import os
 import sys
+import logging
 
-
-config_file = os.path.dirname(
-    os.path.realpath(__file__)) + os.sep + 'config.ini'
-
-try:
-    logging.debug('Read config file: ' + config_file)
-    configRead = configparser.ConfigParser()
-    configRead.read(config_file)
-    config = {
-        'host': configRead['database']['host'],
-        'port': int(configRead['database']['port']),
-        'user': configRead['database']['user'],
-        'passwd': configRead['database']['passwd'],
-        'db': configRead['database']['db'],
-        'charset': 'utf8'
-    }
-except Exception as e:
-    logging.error("Error read config file, check config.ini")
-    sys.exit(1)
+import pandas as pd
 
 
 class MySQL(object):
@@ -35,6 +16,17 @@ class MySQL(object):
             passwd=passwd,
             db=db,
             charset=charset)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, Type, value, traceback):
+        '''
+        Executed after "with"
+        '''
+        if hasattr(self, 'self.cursor'):
+            logging.info('Close the DB')
+            self.cursor.close()
 
     def get_cursor(self):
         return self.conn.cursor()
@@ -65,6 +57,17 @@ class MySQL(object):
         finally:
             cursor.close()
         return data
+
+    def query2dataframe(self, sql):
+        cursor = self.get_cursor()
+        try:
+            df = pd.read_sql(sql, self.conn)
+        except Exception as e:
+            logging.error("mysql query error: %s", e)
+            return None
+        finally:
+            cursor.close()
+        return df
 
     def execute(self, sql, param=None):
         affected_row = 0
@@ -106,37 +109,30 @@ class MySQL(object):
         self.close()
 
 
-mysql = MySQL(**config)
-
-
-def execute_sql(sql_stmt):
-    logging.debug("mysql query statement: %s", sql_stmt)
-    mysql.execute(sql_stmt)
-
-
-def insert_data(header, tupleList):
-    sql = "INSERT INTO `watchdog`(`name`,`price`) VALUES(%s{});".format(
-        ',%s' * (len(tupleList(0)) - 1))
-    mysql.executemany(sql, tupleList)
-
-
-def csv2table(FILE, table_name):
-    with open(FILE, encoding='utf-8') as csvfile:
-        # Detect header, remove if exists
-        has_header = csv.Sniffer().has_header(csvfile.read(1024))
-        csvfile.seek(0)  # Rewind.
-        reader = csv.reader(csvfile)
-        if has_header:
-            # print("Header detected, skip.")
-            header = csvfile.readline().replace('\n', '')
-        csv_reader = csv.reader(csvfile, delimiter=',')
-        header_list = header.split(',')
-
-        sql = '''REPLACE INTO {} VALUES (%s{},NULL,NULL,NULL) '''.format(
-            table_name, ',%s' * (len(header_list) - 1))
-        mysql.executemany(sql, csv_reader)
-
-
 if __name__ == '__main__':
-    FILE = './fileName.csv'
-    csv2table(FILE, 'ssr_server_dyn')
+    import configparser
+
+    config_file = os.path.dirname(
+        os.path.realpath(__file__)) + os.sep + 'config.ini'
+
+    try:
+        logging.debug('Read config file: ' + config_file)
+        configRead = configparser.ConfigParser()
+        configRead.read(config_file)
+        config = {
+            'host': configRead['database']['host'],
+            'port': int(configRead['database']['port']),
+            'user': configRead['database']['user'],
+            'passwd': configRead['database']['passwd'],
+            'db': configRead['database']['db'],
+            'charset': 'utf8'
+        }
+    except Exception as e:
+        logging.error("Error read config file, check config.ini")
+        sys.exit(1)
+
+    query_sql = '''SELECT * FROM Other.test;'''
+
+    with MySQL(**config) as mysql:
+        result = mysql.query2dataframe(query_sql)
+        print(result)

@@ -25,6 +25,7 @@ class SqliteDB():
         if hasattr(self, 'self.cursor'):
             logging.info('Close the DB')
             self.cursor.close()
+        self.close()
 
     def create_database(self, SQLFile):
         '''Create a new database using deploy SQLFile'''
