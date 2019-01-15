@@ -13,7 +13,7 @@ frame = inspect.stack()[-1]
 caller_filename = frame[0].f_code.co_filename
 log_basename = os.path.splitext(os.path.basename(caller_filename))[0]
 
-logFileName = 'log' + os.sep + '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
+logFileName = '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
 
 scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
 LOG_FORMAT = '[%(asctime)s] %(levelname)8s - %(name)s - %(message)s'
