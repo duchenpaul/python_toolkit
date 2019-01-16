@@ -155,6 +155,14 @@ def convert_Bytes(size):
     return '{}{}'.format(round(size, 2), Dic_powerN[n])
 
 
+def convert_timezone(date_str, local='Asia/Shanghai'):
+    '''Convert 2019-01-10T12:09:52-0500 to local time'''
+    import dateutil.parser
+    import pytz
+    date = dateutil.parser.parse(date_str)
+    return date.astimezone(pytz.timezone(local)).strftime('%Y-%m-%d %H:%M:%S %Z')
+    
+
 if __name__ == '__main__':
     x = fwf2dict('test.txt', [8, 16, 16, 12, 14, 16, 7, ])
     print(x)
