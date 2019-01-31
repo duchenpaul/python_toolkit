@@ -17,11 +17,14 @@ def check_dir_exists(DIR):
     return Path(DIR).is_dir()
 
 
-def get_basename(FILE):
+def get_basename(FILE, withExtension=False):
     '''
     Return the basename of a file. e.g. example.txt -> example
     '''
-    return os.path.splitext(os.path.basename(FILE))[0]
+    if withExtension:
+        return ''.join(os.path.splitext(os.path.basename(FILE)))
+    else :
+        return os.path.splitext(os.path.basename(FILE))[0]
 
 
 def file_path(FILE):
