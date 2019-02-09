@@ -38,9 +38,9 @@ class Outlook():
             mail.Recipients.Add(i)
 
         if attachment_path is not None:
-            if type(attachment_path) is str:
+            if isinstance(attachment_path, str):
                 mail.Attachments.Add(Source=attachment_path)
-            elif type(attachment_path) is list:
+            elif isinstance(attachment_path, list):
                 for i in attachment_path:
                     logging.info('Add {} as attachment'.format(i))
                     mail.Attachments.Add(Source=i)

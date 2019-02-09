@@ -7,6 +7,7 @@ import csv
 
 import pandas as pd
 
+
 class SqliteDB():
     """docstring for _sqlitedb"""
 
@@ -93,7 +94,7 @@ class SqliteDB():
         if not tableName:
             tableName = toolkit_file.get_basename(JSON_FILE)
 
-        with open(JSON_FILE, 'r', errors = 'ignore') as f:
+        with open(JSON_FILE, 'r', errors='ignore') as f:
             dicSet = json.load(f)["rows"]
 
         if full_refresh:
@@ -102,7 +103,7 @@ class SqliteDB():
 
         df = pd.DataFrame(dicSet)
         df.to_sql(name=tableName, if_exists='append',
-                         con=self.conn, index=False, chunksize=20000)
+                  con=self.conn, index=False, chunksize=20000)
 
     def load_csv(self, csvFile, tableName=None, delimiter=',', full_refresh=True):
         '''
@@ -119,7 +120,7 @@ class SqliteDB():
         if full_refresh:
             drop_SQL = '''DROP TABLE IF EXISTS {}'''.format(tableName)
             self.execute(drop_SQL)
-            
+
         chunks = pd.read_csv(csvFile, chunksize=100000, sep=delimiter,
                              dtype=str, names=header, header=0)
         for chunk in chunks:

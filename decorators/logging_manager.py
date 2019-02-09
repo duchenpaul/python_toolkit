@@ -9,6 +9,7 @@ import inspect
 
 def now(): return datetime.now().strftime('%F %X')
 
+
 frame = inspect.stack()[-1]
 caller_filename = frame[0].f_code.co_filename
 log_basename = os.path.splitext(os.path.basename(caller_filename))[0]

@@ -9,8 +9,10 @@ except ImportError:
 
 url = 'http://example.com/'
 
+
 class Example():
     """docstring for Example"""
+
     def __init__(self, username, password):
         self.username = username
         self.password = password
@@ -19,12 +21,14 @@ class Example():
 
     def webpage_get(self, url, headers=dict(), allow_redirects=True):
         # print("Get: " + url)
-        self.resp = self.sess.get(url, headers=headers, allow_redirects=allow_redirects, verify=False)
+        self.resp = self.sess.get(
+            url, headers=headers, allow_redirects=allow_redirects, verify=False)
         # print(self.resp.content.decode('utf-8').replace('\r\n', '\n'))
         return self.resp
 
     def webpage_post(self, url, data, headers=dict()):
-        self.resp = self.sess.post(url, data=data, headers=headers, verify=False)
+        self.resp = self.sess.post(
+            url, data=data, headers=headers, verify=False)
         # self.req = requests.Request('POST', url, data=data, headers=headers)
         # self.prepped = self.sess.prepare_request(self.req)
         # self.resp = self.sess.send(self.prepped)
@@ -32,13 +36,8 @@ class Example():
 
     def save_page(self, page):
         with open('./test.html', 'w', encoding='utf-8') as f:
-                f.write(page)
+            f.write(page)
         print("Page has been saved as " + './test.html')
-
-    def save_json(self, page, file):
-        with open(file, 'w', encoding='utf-8') as f:
-                f.write(page)
-        print("json response been saved as " + file)
 
     def login(self):
         headers = {
@@ -50,8 +49,9 @@ class Example():
             'Accept-Encoding': 'gzip, deflate',
             'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
         }
-        self.resp = self.webpage_get(self.url, headers=headers, allow_redirects=True)
-        
+        self.resp = self.webpage_get(
+            self.url, headers=headers, allow_redirects=True)
+
         postDataDict = {
             'username': self.username,
             'password': self.password,
@@ -61,6 +61,7 @@ class Example():
         post_data = urllib.parse.urlencode(postDataDict)
         print(post_data)
         self.resp = self.webpage_post(url, post_data, headers=headers)
+
 
 if __name__ == '__main__':
     username, password = 'username', 'password'

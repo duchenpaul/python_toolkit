@@ -1,5 +1,5 @@
 import MySQLdb
-import csv
+# import csv
 import os
 import sys
 import logging
@@ -102,7 +102,7 @@ class MySQL(object):
     def close(self):
         try:
             self.conn.close()
-        except:
+        except Exception as e:
             pass
 
     def __del__(self):

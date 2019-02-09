@@ -164,13 +164,13 @@ def convert_timezone(date_str, locale='Asia/Shanghai'):
     return date.astimezone(pytz.timezone(locale)).strftime('%Y-%m-%d %H:%M:%S %Z')
 
 
-def chunks(list, n):
+def chunks(lst, n):
     """Yield successive n-sized chunks from list.
     Usage:
         list(chunks(toolkit_file.get_file_list(SOURCE_FOLDER), 6))
     """
-    for i in range(0, len(list), n):
-        yield list[i:i + n]
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
 
 if __name__ == '__main__':
     x = fwf2dict('test.txt', [8, 16, 16, 12, 14, 16, 7, ])
