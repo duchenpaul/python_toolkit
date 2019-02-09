@@ -165,7 +165,10 @@ def convert_timezone(date_str, locale='Asia/Shanghai'):
 
 
 def chunks(list, n):
-    """Yield successive n-sized chunks from list."""
+    """Yield successive n-sized chunks from list.
+    Usage:
+        list(chunks(toolkit_file.get_file_list(SOURCE_FOLDER), 6))
+    """
     for i in range(0, len(list), n):
         yield list[i:i + n]
 
