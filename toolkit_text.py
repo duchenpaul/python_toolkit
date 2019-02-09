@@ -120,6 +120,7 @@ def csv2dict(csv_file):
 
 ########################################################################
 
+
 def fwf2dict(FILE, widthList):
     '''Transform fixed width file into dict'''
 
@@ -161,7 +162,12 @@ def convert_timezone(date_str, locale='Asia/Shanghai'):
     import pytz
     date = dateutil.parser.parse(date_str)
     return date.astimezone(pytz.timezone(locale)).strftime('%Y-%m-%d %H:%M:%S %Z')
-    
+
+
+def chunks(list, n):
+    """Yield successive n-sized chunks from list."""
+    for i in range(0, len(list), n):
+        yield list[i:i + n]
 
 if __name__ == '__main__':
     x = fwf2dict('test.txt', [8, 16, 16, 12, 14, 16, 7, ])
