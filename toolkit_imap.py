@@ -23,7 +23,7 @@ class Imap():
             logging.error("LOGIN FAILED!!! ")
             raise
         else:
-            logging.info(rv, data)
+            logging.info('rv: {}, data: {}'.format(rv, data))
 
     def __enter__(self):
         return self
@@ -64,7 +64,7 @@ class Imap():
     def get_mail_subject(self, mail_num):
         rv, mail_data_bin = self.con.fetch(mail_num, '(RFC822)')
         if rv != 'OK':
-            logging.error("ERROR getting message", mail_num)
+            logging.error("ERROR getting message: mail_num {}".format(mail_num))
             return
         # Fetch again if the mail not fetched
         mail_data_raw = mail_data_bin[0][1].decode(
@@ -75,7 +75,7 @@ class Imap():
     def download_attachment(self, mail_num):
         rv, mail_data_bin = self.con.fetch(mail_num, '(RFC822)')
         if rv != 'OK':
-            logging.error("ERROR getting message", mail_num)
+            logging.error("ERROR getting message {}".format(mail_num))
             return
         # Fetch again if the mail not fetched
         mail_data_raw = mail_data_bin[0][1].decode(
@@ -114,7 +114,7 @@ class Imap():
         logging.info("Processing mailbox {}...\n".format(mailFolder))
         rv, data = self.con.select(mailFolder)
         if rv != 'OK':
-            logging.error("ERROR: Unable to open mailbox ", rv)
+            logging.error("ERROR: Unable to open mailbox: {}".format(rv))
             return
         rv, data = self.con.search(None, "ALL")
         return data[0].split()
@@ -128,7 +128,7 @@ class Imap():
     def walk_mail_folder(self, mailFolder):
         rv, data = self.con.select(mailFolder)
         if rv != 'OK':
-            logging.error("ERROR: Unable to open mailbox ", rv)
+            logging.error("ERROR: Unable to open mailbox: {}".format(rv))
             return
         logging.info("Processing mailbox {}...\n".format(mailFolder))
         rv, data = self.con.search(None, "ALL")
