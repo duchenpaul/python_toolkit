@@ -77,13 +77,13 @@ def csv2list(FILE):
         return list(csv.reader(csvfile, delimiter=','))
 
 
-def list2csv(list, FILE):
+def list2csv(list_, FILE):
     listHeader = ['col1', 'col2']
     with open(FILE, 'w', encoding='utf-8', newline='') as f:
         writer = csv.writer(f)
         f.write(', '.join(listHeader))
         f.write('\n')
-        writer.writerows(list)
+        writer.writerows(list_)
 
 ########################################################################
 
