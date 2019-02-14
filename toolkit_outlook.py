@@ -21,11 +21,14 @@ class Outlook():
         toFolderPathStr = 'self.inbox' + ''.join(['''.Folders['{}']'''.format(i) for i in folderPath.split('/') if i])
         return eval(toFolderPathStr)
 
-    def send_mail(self, subj, body, recipients=['chdu@merkleinc.com'], attachment_path=None, mail_type = 'PlainText'):
+    def send_mail(self, subj, body, recipients=None, attachment_path=None, mail_type = 'PlainText'):
         '''
         Attachment can be list or string
         mail_type: PlainText/html
         '''
+        if recipients is None:
+            recipients = ['chdu@merkleinc.com']
+            
         print("Subject: " + subj)
         print("Body: " + body)
         print("Send to: " + str(recipients))
