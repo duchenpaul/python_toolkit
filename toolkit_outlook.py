@@ -18,21 +18,23 @@ class Outlook():
     def folderPathConvert(self, folderPath):
         ''' Input folder path seperated by '/'
             Return folder instance'''
-        toFolderPathStr = 'self.inbox' + ''.join(['''.Folders['{}']'''.format(i) for i in folderPath.split('/') if i])
+        toFolderPathStr = 'self.inbox' + \
+            ''.join(['''.Folders['{}']'''.format(i)
+                     for i in folderPath.split('/') if i])
         return eval(toFolderPathStr)
 
-    def send_mail(self, subj, body, recipients=None, attachment_path=None, mail_type = 'PlainText'):
+    def send_mail(self, subj, body, recipients=None, attachment_path=None, mail_type='PlainText'):
         '''
         Attachment can be list or string
         mail_type: PlainText/html
         '''
         if recipients is None:
             recipients = ['chdu@merkleinc.com']
-            
+
         print("Subject: " + subj)
         print("Body: " + body)
         print("Send to: " + str(recipients))
-        
+
         logging.info("Subject: " + subj)
         logging.info("Body: " + body)
         logging.info("Send to: " + str(recipients))
@@ -82,7 +84,7 @@ class Outlook():
         messages = folder.Items
         return [message.Subject for message in messages]
 
-    def fetch_mail(self, folderName = 'INBOX', subject = 'keywords'):
+    def fetch_mail(self, folderName='INBOX', subject='keywords'):
         '''
         Fetch the HTMLBody of mail in a folder
         '''
@@ -132,7 +134,7 @@ class Outlook():
 outlook = Outlook()
 
 
-def outlook_send_mail(subj, body, recipients=[default_recipients], attachment_path=None):
+def outlook_send_mail(subj, body, recipients=None, attachment_path=None):
     outlook.send_mail(subj, body, recipients=recipients,
                       attachment_path=attachment_path)
 
