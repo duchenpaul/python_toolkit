@@ -19,14 +19,18 @@ class Example():
         self.url = 'http://example.com/'
         self.sess = requests.Session()
 
-    def webpage_get(self, url, headers=dict(), allow_redirects=True):
+    def webpage_get(self, url, headers=None, allow_redirects=True):
+        if headers is None:
+            headers = dict()
         # print("Get: " + url)
         self.resp = self.sess.get(
             url, headers=headers, allow_redirects=allow_redirects, verify=False)
         # print(self.resp.content.decode('utf-8').replace('\r\n', '\n'))
         return self.resp
 
-    def webpage_post(self, url, data, headers=dict()):
+    def webpage_post(self, url, data, headers=None):
+        if headers is None:
+            headers = dict()
         self.resp = self.sess.post(
             url, data=data, headers=headers, verify=False)
         # self.req = requests.Request('POST', url, data=data, headers=headers)
