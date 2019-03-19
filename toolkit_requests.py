@@ -6,6 +6,7 @@ try:
 except ImportError:
     from urllib import quote_plus
 
+# proxies = { "http": "http://127.0.0.1:8888", }
 
 url = 'http://example.com/'
 
@@ -23,8 +24,9 @@ class Example():
         if headers is None:
             headers = dict()
         # print("Get: " + url)
+        proxies = None
         self.resp = self.sess.get(
-            url, headers=headers, allow_redirects=allow_redirects, verify=False)
+            url, headers=headers, allow_redirects=allow_redirects, verify=False, proxies=proxies)
         # print(self.resp.content.decode('utf-8').replace('\r\n', '\n'))
         return self.resp
 
