@@ -151,6 +151,7 @@ class Imap():
 
     def mark_all_mail_read(self):
         for mailbox in self.get_mail_folder():
+            logging.info("Mark all mails in folder: {}".format(mailbox))
             for mail_num in self.get_mail_num(mailbox):
                 self.set_mail_read(mail_num)
 
