@@ -20,7 +20,7 @@ def read_config_general(configFile=config_file):
         config = {}
         for sectionName in configRead.sections():
             config[sectionName] = {}
-            options = [i.upper() for i in configRead.options(sectionName)]
+            options = [i for i in configRead.options(sectionName)]
             for j in options:
                 config[sectionName][j] = configRead[sectionName][j]
 
