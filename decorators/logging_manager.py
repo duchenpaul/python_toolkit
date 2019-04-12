@@ -72,7 +72,7 @@ def logging_to_file(func):
             return x
         finally:
             t2 = datetime.now().timestamp()
-            logger.info('{} ends on {}, duration: {}s'.format(
+            logger.info('{} ends on {}, duration: {}s\n'.format(
                 func.__name__, now(), round(t2 - t1, 3)))
     return wrapper
 
