@@ -9,12 +9,17 @@ import inspect
 
 def now(): return datetime.now().strftime('%F %X')
 
-
+logDir = 'logs'
 frame = inspect.stack()[-1]
 caller_filename = frame[0].f_code.co_filename
 log_basename = os.path.splitext(os.path.basename(caller_filename))[0]
 
-logFileName = '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
+try:
+    os.mkdir(logDir)
+except Exception as e:
+    pass
+
+logFileName = logDir + os.sep + '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
 
 scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
 LOG_FORMAT = '[%(asctime)s] %(levelname)8s - %(name)s - %(message)s'
