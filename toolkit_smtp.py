@@ -5,6 +5,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
 from email import encoders
 import getopt
 from os.path import basename
@@ -38,7 +39,7 @@ class Smtp():
 
         # print(self.SMTP_SERVER, self.EMAIL_ACCOUNT, self.EMAIL_PASSWORD, self.DISTRI_LIST)
 
-    def send_mail(self, subject, content, attach_file=None):
+    def send_mail(self, subject, content, attach_file=None, image=None):
         msg = MIMEMultipart()
         msg['Subject'] = subject
         # msg['From'] = self.EMAIL_ACCOUNT
@@ -62,6 +63,22 @@ class Smtp():
                     logging.info('Attached file {}'.format(file))
                 except Exception as e:
                     logging.info("could not attach file")
+                    raise
+
+        if image:
+            # Add <img src="cid:{}"><br>'.format(image) in body
+            imageList = [i.strip() for i in image.split(',')]
+            for file in imageList:
+                try:
+                    file_name = basename(file)
+                    with open(file, 'rb') as f:
+                        img = MIMEImage(f.read())
+                    img.add_header('Content-ID', '<{}>'.format(file))
+                    msg.attach(img)
+                    logging.info('Attached image {}'.format(file))
+                except Exception as e:
+                    logging.info("could not attach image")
+                    raise
 
         body = ''.join(content)
         body = body.replace('\n', '<br />')
@@ -89,9 +106,9 @@ class Smtp():
             server.quit()
 
 
-def send_mail(subject, content, attach_file=None):
+def send_mail(subject, content, attach_file=None, image=None):
     smtp = Smtp(**config)
-    smtp.send_mail(subject, content, attach_file)
+    smtp.send_mail(subject, content, attach_file, image)
 
 
 def script_send_mail():
