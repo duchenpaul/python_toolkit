@@ -1,5 +1,7 @@
 # import functools
 import logging
+from logging.handlers import TimedRotatingFileHandler
+
 from datetime import datetime
 import os
 import sys
@@ -9,7 +11,12 @@ import inspect
 
 def now(): return datetime.now().strftime('%F %X')
 
+
 logDir = 'logs'
+
+# normal/TimedRotating Choose logging Handler between straight Handler and TimedRotatingHandler
+logging_type = 'TimedRotating'
+
 frame = inspect.stack()[-1]
 caller_filename = frame[0].f_code.co_filename
 log_basename = os.path.splitext(os.path.basename(caller_filename))[0]
@@ -19,12 +26,22 @@ try:
 except Exception as e:
     pass
 
-logFileName = logDir + os.sep + '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
 
 scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
 LOG_FORMAT = '[%(asctime)s] %(levelname)8s - %(name)s - %(message)s'
 # LOG_FORMAT = logging.Formatter(LOG_FORMAT, '%Y-%m-%d %H:%M:%S')
-logging.basicConfig(handlers=[logging.FileHandler(logFileName, 'w', 'utf-8')],
+
+if logging_type == 'TimedRotating':
+    logFileName = logDir + os.sep + \
+    '{}.log'.format(log_basename)
+    TimedRotatingHandler = TimedRotatingFileHandler(logFileName, when="D", interval=1, encoding='utf-8', backupCount=30)
+else:
+    logFileName = logDir + os.sep + \
+        '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
+    normalHandler = logging.FileHandler(logFileName, 'w', 'utf-8')
+
+
+logging.basicConfig(handlers=[TimedRotatingHandler],
                     level=logging.INFO,
                     format=LOG_FORMAT,
                     datefmt='%F %X',
@@ -83,6 +100,9 @@ def logging_to_file(func):
 
 
 if __name__ == '__main__':
-    log_msg('sdf')
+    import time
+    for x in range(100):
+        log_msg('new is {}'.format(now()))
+        time.sleep(5)
     # print(dir(logging))
     # print(logging.getLevelName('d'))
