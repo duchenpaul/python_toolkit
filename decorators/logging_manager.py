@@ -34,7 +34,7 @@ LOG_FORMAT = '[%(asctime)s] %(levelname)8s - %(name)s - %(message)s'
 if logging_type == 'TimedRotating':
     logFileName = logDir + os.sep + \
     '{}.log'.format(log_basename)
-    TimedRotatingHandler = TimedRotatingFileHandler(logFileName, when="D", interval=1, encoding='utf-8', backupCount=30)
+    TimedRotatingHandler = TimedRotatingFileHandler(logFileName, when="midnight", interval=1, encoding='utf-8', backupCount=30)
 else:
     logFileName = logDir + os.sep + \
         '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
