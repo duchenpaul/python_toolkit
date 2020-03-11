@@ -68,10 +68,12 @@ def purge_folder(folder, filePattern='*'):
 
 def create_folder(folderName):
     '''Create folder if not exists'''
-    my_file = Path(folderName)
-    if not my_file.is_dir():
+    try:
         logging.info('Folder {} not found, creating a new one'.format(folderName))
         os.mkdir(folderName)
+    except FileExistsError as e:
+        pass
+    
 
 
 def text_replace_in_file(pattern, string, file):
@@ -105,4 +107,5 @@ def remove_junk_line(FILE, junkwords):
     shutil.move(FILE + 'tmp', FILE)
 
 if __name__ == '__main__':
-    print(file_path(r'C:\Users\chdu\Downloads\sf'))
+    folderName = 'decorators'
+    create_folder(folderName)
