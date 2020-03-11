@@ -69,7 +69,7 @@ def purge_folder(folder, filePattern='*'):
 def create_folder(folderName):
     '''Create folder if not exists'''
     try:
-        logging.info('Folder {} not found, creating a new one'.format(folderName))
+        # logging.info('Folder {} not found, creating a new one'.format(folderName))
         os.mkdir(folderName)
     except FileExistsError as e:
         pass
