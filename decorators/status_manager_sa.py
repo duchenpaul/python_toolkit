@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 import sys
 import os
 
@@ -6,15 +7,21 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy import Table, Column
 from sqlalchemy import Integer, String, DateTime, Float
 from sqlalchemy.sql import and_, or_, not_
+from sqlalchemy import func
+from sqlalchemy.orm import sessionmaker
 
-DB_FILE = 'test.db'
+from contextlib import contextmanager
+
+DB_FILE = 'bitmap_meta.db'
 engine = create_engine('sqlite:///{}'.format(DB_FILE))
 metadata = MetaData(engine)
+Session = sessionmaker(bind=engine)
 
 # status_history_table = Table('status_history_table', metadata, autoload=True)
 
 status_history_table = Table(
     'status_history_table', metadata,
+    Column('record_id', Integer),
     Column('script_name', String),
     Column('load_name', String),
     Column('status', String),
@@ -26,6 +33,18 @@ status_history_table = Table(
 
 metadata.create_all(engine)
 
+@contextmanager
+def session_scope():
+    """Provide a transactional scope around a series of operations."""
+    session = Session()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
 
 def insert_status(script_name, load_name, status, duration, method='ins'):
     update_date = datetime.now()
@@ -64,14 +83,14 @@ def insert_status(script_name, load_name, status, duration, method='ins'):
         # print(result)
 
 
-def logging_status(func):
+def logging_status(_func):
     def wrapper(*args, **kwargs):
-        loadName = func.__name__
+        loadName = _func.__name__
         scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
         try:
             t1 = datetime.now().timestamp()
             insert_status(scriptName, loadName, 'RUNNING', -1)
-            x = func(*args, **kwargs)
+            x = _func(*args, **kwargs)
         except Exception as e:
             status = 'FAILED'
             print(e)
@@ -85,6 +104,28 @@ def logging_status(func):
     return wrapper
 
 
+def checking_status(_func):
+    def wrapper(*args, **kwargs):
+        loadName = _func.__name__
+        scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
+        with session_scope() as session:
+            query = session.query(func.count(status_history_table.c.script_name))
+            query = query.filter(status_history_table.c.status == 'RUNNING')
+            count = query.scalar()
+            print(count)
+        try:
+            assert count == 0
+        except AssertionError as e:
+            logging.error('There is another process running')
+            raise
+        else:
+            _func(*args, **kwargs)
+        finally:
+            pass
+    return wrapper
+
+
+@checking_status
 @logging_status
 def testee():
     import time
