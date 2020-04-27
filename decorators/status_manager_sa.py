@@ -112,7 +112,6 @@ def checking_status(_func):
             query = session.query(func.count(status_history_table.c.script_name))
             query = query.filter(status_history_table.c.status == 'RUNNING')
             count = query.scalar()
-            print(count)
         try:
             assert count == 0
         except AssertionError as e:
@@ -129,7 +128,7 @@ def checking_status(_func):
 @logging_status
 def testee():
     import time
-    time.sleep(2)
+    # time.sleep(2)
     print('qwe')
 
 
