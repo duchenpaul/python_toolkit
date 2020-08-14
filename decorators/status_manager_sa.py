@@ -107,7 +107,7 @@ def logging_status(_func):
             t2 = datetime.now().timestamp()
             insert_status(run_id, scriptName, loadName, status,
                           round(t2 - t1, 2), method='upd')
-            return x
+        return x
     return wrapper
 
 
