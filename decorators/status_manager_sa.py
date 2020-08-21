@@ -115,7 +115,7 @@ def logging_status(_func):
             status_record['method'] = 'upd'
             insert_status(**status_record)
             x = _func(*args, **kwargs)
-            if type(x) is dict:
+            if isinstance(x, dict):
                 status = x.get('status')
                 descrip = x.get('description')
         except AssertionError as e:
