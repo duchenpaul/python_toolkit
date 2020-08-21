@@ -12,15 +12,16 @@ from sqlalchemy.orm import sessionmaker
 
 from contextlib import contextmanager
 
+import config
 
-DB_FILE = 'bitmap_meta.db'
-engine = create_engine('sqlite:///{}'.format(DB_FILE))
+engine = config.bbraun_bi_engine
 metadata = MetaData(engine)
+metadata.schema = config.META_SCHEMA
 Session = sessionmaker(bind=engine)
 
 # status_history_table = Table('status_history_table', metadata, autoload=True)
 
-status_history_table_name = 'status_history_table'
+status_history_table_name = 'process_history'
 
 status_history_table = Table(
     status_history_table_name, metadata,
@@ -28,6 +29,7 @@ status_history_table = Table(
     Column('script_name', String(50)),
     Column('load_name', String(50)),
     Column('status', String(50)),
+    Column('description', String(50)),
     Column('start_date', DateTime),
     Column('end_date', DateTime),
     Column('duration', Float),
@@ -51,7 +53,7 @@ def session_scope():
         session.close()
 
 
-def insert_status(run_id, script_name, load_name, status, duration, method='ins'):
+def insert_status(run_id, script_name, load_name, status, duration, description='', method='ins'):
     update_date = datetime.now()
     if method == 'ins':
         record_values = {
@@ -59,6 +61,7 @@ def insert_status(run_id, script_name, load_name, status, duration, method='ins'
             'script_name': script_name,
             'load_name': load_name,
             'status': status,
+            'description': description,
             'start_date': update_date,
             'end_date': None,
             'duration': -1,
@@ -69,6 +72,7 @@ def insert_status(run_id, script_name, load_name, status, duration, method='ins'
     elif method == 'upd':
         record_values = {
             'status': status,
+            'description': description,
             'end_date': update_date,
             'duration': duration,
             'update_date': update_date,
@@ -89,29 +93,52 @@ def logging_status(_func):
     def wrapper(*args, **kwargs):
         loadName = _func.__name__
         scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
+        status = None
+        descrip = None
         try:
             t1 = datetime.now().timestamp()
             run_id = get_status_history_table_count()
-            insert_status(run_id, scriptName, loadName, 'READY', -1)
-            checking_status(loadName)
-            insert_status(run_id, scriptName, loadName, 'RUNNING', -1, method='upd')
+            status_record = {
+                'run_id': run_id,
+                'script_name': scriptName,
+                'load_name': loadName,
+                'status': None,
+                'duration': None,
+                'description': None,
+                'method': 'ins',
+            }
+            status_record['status'] = 'READY'
+            status_record['duration'] = -1
+            insert_status(**status_record)
+            checking_status()
+            status_record['status'] = 'RUNNING'
+            status_record['method'] = 'upd'
+            insert_status(**status_record)
             x = _func(*args, **kwargs)
+            if type(x) is dict:
+                status = x.get('status')
+                descrip = x.get('description')
         except AssertionError as e:
-            status = 'BLOCKED'
+            status = status if status else 'BLOCKED'
+            descrip = descrip if descrip else ''
         except Exception as e:
-            status = 'FAILED'
+            status = status if status else 'FAILED'
+            descrip = descrip if descrip else ''
             logging.exception()
         else:
-            status = 'COMPLETED'
+            status = status if status else 'COMPLETED'
+            descrip = descrip if descrip else ''
         finally:
             t2 = datetime.now().timestamp()
-            insert_status(run_id, scriptName, loadName, status,
-                          round(t2 - t1, 2), method='upd')
-        return x
+            status_record['status'] = status
+            status_record['description'] = descrip
+            status_record['duration'] = round(t2 - t1, 2)
+            insert_status(**status_record)
+            return x
     return wrapper
 
 
-def checking_status(loadName):
+def checking_status():
     scriptName = os.path.basename(sys.argv[0].replace('.py', ''))
     with session_scope() as session:
         query = session.query(func.count(
@@ -136,7 +163,7 @@ def get_status_history_table_count():
 @logging_status
 def testee():
     import time
-    time.sleep(2)
+    time.sleep(3)
     print('qwe')
 
 
