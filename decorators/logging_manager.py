@@ -3,6 +3,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 
 from datetime import datetime
+import time
 import os
 import sys
 
@@ -15,7 +16,7 @@ def now(): return datetime.now().strftime('%F %X')
 logDir = 'logs'
 
 # normal/TimedRotating Choose logging Handler between straight Handler and TimedRotatingHandler
-logging_type = 'TimedRotating'
+logging_type = 'normal'
 
 frame = inspect.stack()[-1]
 caller_filename = frame[0].f_code.co_filename
@@ -38,7 +39,7 @@ if logging_type == 'TimedRotating':
 else:
     logFileName = logDir + os.sep + \
         '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
-    Handler = logging.FileHandler(logFileName, 'w', 'utf-8')
+    Handler = logging.FileHandler(logFileName, 'a', 'utf-8')
 
 
 logging.basicConfig(handlers=[Handler],
@@ -73,7 +74,7 @@ def logging_to_file(func):
     def wrapper(*args, **kwargs):
         # logger = create_logger()
         try:
-            t1 = datetime.now().timestamp()
+            t1 = time.time()
             logger.info('{} starts on {}'.format(func.__name__, now()))
 
             func_args = inspect.signature(func).bind(*args, **kwargs).arguments
@@ -93,14 +94,13 @@ def logging_to_file(func):
         else:
             return x
         finally:
-            t2 = datetime.now().timestamp()
+            t2 = time.time()
             logger.info('{} ends on {}, duration: {}s\n'.format(
                 func.__name__, now(), round(t2 - t1, 3)))
     return wrapper
 
 
 if __name__ == '__main__':
-    import time
     for x in range(100):
         log_msg('new is {}'.format(now()))
         time.sleep(5)
