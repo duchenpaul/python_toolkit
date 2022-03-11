@@ -30,12 +30,12 @@ class Example():
         # print(self.resp.content.decode('utf-8').replace('\r\n', '\n'))
         return self.resp
 
-    def webpage_post(self, url, data, headers=None):
+    def webpage_post(self, url, data=None, json=None, headers=None):
         if headers is None:
             headers = dict()
         proxies = None
         self.resp = self.sess.post(
-            url, data=data, headers=headers, verify=False, proxies=proxies, timeout=10)
+            url, data=data, json=json, headers=headers, verify=False, proxies=proxies, timeout=10)
         # self.req = requests.Request('POST', url, data=data, headers=headers)
         # self.prepped = self.sess.prepare_request(self.req)
         # self.resp = self.sess.send(self.prepped)
