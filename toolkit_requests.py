@@ -1,75 +1,126 @@
-'''A template for sending requests to websites'''
-import requests
 import urllib.parse
+import requests
+import json
+import logging
+import base64
+
+import config_loader
+
 try:
     from urllib.parse import quote_plus
 except ImportError:
     from urllib import quote_plus
 
-# proxies = { "http": "http://127.0.0.1:8888", }
+config = config_loader.config
 
-url = 'http://example.com/'
+# proxies = {"http": "socks5://127.0.0.1:8888", }
 
 
-class Example():
-    """docstring for Example"""
+class Gitea():
+    """docstring for Gitea."""
 
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
-        self.url = 'http://example.com/'
+    def __init__(self, token: str, host='https://gitea.com'):
+        self.host = host
+        self.token = token
         self.sess = requests.Session()
+        self.headers = {
+            "Authorization": "token " + token,
+        }
 
     def webpage_get(self, url, headers=None, allow_redirects=True):
         if headers is None:
-            headers = dict()
+            headers = self.headers
         # print("Get: " + url)
         proxies = None
         self.resp = self.sess.get(
             url, headers=headers, allow_redirects=allow_redirects, verify=False, proxies=proxies, timeout=10)
-        # print(self.resp.content.decode('utf-8').replace('\r\n', '\n'))
         return self.resp
 
     def webpage_post(self, url, data=None, json=None, headers=None):
         if headers is None:
-            headers = dict()
+            headers = self.headers
         proxies = None
         self.resp = self.sess.post(
-            url, data=data, json=json, headers=headers, verify=False, proxies=proxies, timeout=10)
-        # self.req = requests.Request('POST', url, data=data, headers=headers)
-        # self.prepped = self.sess.prepare_request(self.req)
-        # self.resp = self.sess.send(self.prepped)
+            url, headers=headers, data=data, json=json, verify=False, proxies=proxies, timeout=10)
         return self.resp
 
-    def save_page(self, page):
-        with open('./test.html', 'w', encoding='utf-8') as f:
-            f.write(page)
-        print("Page has been saved as " + './test.html')
+    def webpage_put(self, url, data=None, json=None, headers=None):
+        if headers is None:
+            headers = self.headers
+        proxies = None
+        self.resp = self.sess.put(
+            url, headers=headers, data=data, json=json, verify=False, proxies=proxies, timeout=10)
+        return self.resp
 
-    def login(self):
-        headers = {
-            'Host': 'club.mail.126.com',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Encoding': 'gzip, deflate',
-            'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+    def webpage_delete(self, url, headers=None, allow_redirects=True):
+        if headers is None:
+            headers = self.headers
+        proxies = None
+        self.resp = self.sess.delete(
+            url, headers=headers, allow_redirects=allow_redirects, verify=False, proxies=proxies, timeout=10)
+        return self.resp
+
+    def request_api(self, method: str, api_endpoint: str, payload={}) -> str:
+        """
+            Request Gitea API.
+            doc: https://gitea.com/api/swagger
+
+        Args:
+            method (str): Request method, one of ("GET", "POST", "DELETE", "PUT")
+            api_endpoint (str): api endpoint
+            payload (dict): payload in post request
+
+        Returns:
+            str: _description_
+        """
+        url = f'{self.host}/api/v1{api_endpoint}'
+        match method:
+            case "GET":
+                self.resp = self.webpage_get(url, headers=self.headers, allow_redirects=True)
+            case "POST":
+                self.resp = self.webpage_post(url, headers=self.headers, json=payload)
+            case "PUT":
+                self.resp = self.webpage_put(url, headers=self.headers, json=payload)
+            case "DELETE":
+                self.resp = self.webpage_delete(url, headers=self.headers)
+        try:
+            assert self.resp.status_code in (200, 201)
+        except AssertionError as e:
+            logging.error('Error request API:')
+            logging.error(self.resp.content.decode('unicode-escape'))
+            self.resp.raise_for_status()
+        return json.loads(self.resp.text)
+
+    def get_file_content(self, owner: str, repo: str, filepath: str) -> dict:
+        api_endpoint = f"/repos/{owner}/{repo}/contents/{filepath}"
+        result = self.request_api("GET", api_endpoint)
+        return result
+
+    def create_file_content(self, owner: str, repo: str, filepath: str, content: str) -> dict:
+        payload = {
+            "content": base64.b64encode(content.encode()).decode()
         }
-        self.resp = self.webpage_get(
-            self.url, headers=headers, allow_redirects=True)
+        api_endpoint = f"/repos/{owner}/{repo}/contents/{filepath}"
+        result = self.request_api("POST", api_endpoint, payload=payload)
+        return result
 
-        postDataDict = {
-            'username': self.username,
-            'password': self.password,
-            'url': 'http://club.mail.126.com/jifen/index.do',
-            'm-URSlogin-box-form-url2': 'http://club.mail.126.com/jifen/index.do',
+    def update_file_content(self, owner: str, repo: str, filepath: str, content: str) -> dict:
+        payload = {
+            "content": base64.b64encode(content.encode()).decode(),
+            "sha": self.get_file_content(owner, repo, filepath)["sha"],
         }
-        post_data = urllib.parse.urlencode(postDataDict)
-        print(post_data)
-        self.resp = self.webpage_post(url, post_data, headers=headers)
+        logging.debug(' '.join((owner, repo, filepath)))
+        logging.debug(json.dumps(payload))
+        api_endpoint = f"/repos/{owner}/{repo}/contents/{filepath}"
+        result = self.request_api("PUT", api_endpoint, payload=payload)
+        return result
 
 
-if __name__ == '__main__':
-    username, password = 'username', 'password'
-    exampleins = Example(username, password)
+if __name__ == "__main__":
+    # token = ""
+    # gitea = Gitea(token=token)
+    # owner = "duchenpaul"
+    # repo = "mixed_nodes"
+    # filepath = "v2board_nodes.txt"
+    # print(gitea.update_file_content(owner, repo, filepath, 'teddst'))
+    pass
