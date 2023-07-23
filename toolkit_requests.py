@@ -117,6 +117,14 @@ class Gitea():
 
 
 if __name__ == "__main__":
+    logger = logging.getLogger()
+    handler = logging.StreamHandler()
+    LOG_FORMAT = '[%(asctime)s] %(levelname)8s - %(name)s - %(message)s'
+    formatter = logging.Formatter(LOG_FORMAT)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
     # token = ""
     # gitea = Gitea(token=token)
     # owner = "duchenpaul"
