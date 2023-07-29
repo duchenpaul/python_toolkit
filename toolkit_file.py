@@ -1,4 +1,5 @@
-import os, re
+import os
+import re
 import os.path
 import glob
 from pathlib import Path
@@ -6,6 +7,7 @@ import codecs
 import shutil
 
 import logging
+
 
 def check_file_exists(FILE):
     '''Check if the FILE exists'''
@@ -23,7 +25,7 @@ def get_basename(FILE, withExtension=False):
     '''
     if withExtension:
         return ''.join(os.path.splitext(os.path.basename(FILE)))
-    else :
+    else:
         return os.path.splitext(os.path.basename(FILE))[0]
 
 
@@ -47,22 +49,18 @@ def line_prepender(filename, line):
         f.write(line.rstrip('\r\n') + '\n' + content)
 
 
-def get_file_list(folder):
+def get_file_list(folder, filePattern='*'):
     '''Return the list of file of the folder'''
-    file_list = []
-    for path, subdirs, files in os.walk(folder):
-        for name in files:
-            file_list.append(os.path.join(path, name))
-    return file_list
+    return glob.glob(os.path.join(folder, filePattern))
 
 
 def purge_folder(folder, filePattern='*'):
     '''Empty everything in the folder'''
     # filelist = [ f for f in os.listdir(folder) ] #if f.endswith(".bak") ]
-    filelist = glob.glob(folder + os.sep + filePattern)
+    filelist = glob.glob(os.path.join(folder, filePattern))
     for f in filelist:
         # print(f)
-        os.remove(os.path.join(f)) # using glob
+        os.remove(os.path.join(f))  # using glob
         # os.remove(os.path.join(folder, f)) # using listdir
 
 
@@ -73,7 +71,6 @@ def create_folder(folderName):
         os.mkdir(folderName)
     except FileExistsError as e:
         pass
-    
 
 
 def text_replace_in_file(pattern, string, file):
@@ -84,9 +81,9 @@ def text_replace_in_file(pattern, string, file):
         f.write(replaced_script)
 
 
-def convert_encode2utf8(sourceFileName, targetFileName, srcEncoding = 'utf-16'):
+def convert_encode2utf8(sourceFileName, targetFileName, srcEncoding='utf-16'):
     '''Save the file with encoding of utf-8'''
-    BLOCKSIZE = 1048576 # or some other, desired size in bytes
+    BLOCKSIZE = 1048576  # or some other, desired size in bytes
     with codecs.open(sourceFileName, 'r', 'utf-16') as sourceFile:
         with codecs.open(targetFileName, 'w', 'utf-8') as targetFile:
             while True:
@@ -106,6 +103,6 @@ def remove_junk_line(FILE, junkwords):
                 newfile.write(line)
     shutil.move(FILE + 'tmp', FILE)
 
+
 if __name__ == '__main__':
-    folderName = 'decorators'
-    create_folder(folderName)
+    print(get_file_list(r'c:\Users\duche\Desktop\project\iphone_photo_classify'))
