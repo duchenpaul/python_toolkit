@@ -33,12 +33,10 @@ LOG_FORMAT = '[%(asctime)s] %(levelname)8s - %(name)s - %(message)s'
 # LOG_FORMAT = logging.Formatter(LOG_FORMAT, '%Y-%m-%d %H:%M:%S')
 
 if logging_type == 'TimedRotating':
-    logFileName = logDir + os.sep + \
-        '{}.log'.format(log_basename)
+    logFileName = os.path.join(logDir, log_basename + '.log')
     Handler = TimedRotatingFileHandler(logFileName, when="midnight", interval=1, encoding='utf-8', backupCount=30)
 else:
-    logFileName = logDir + os.sep + \
-        '{}_{}.log'.format(log_basename, datetime.now().strftime('%F'))
+    logFileName = os.path.join(logDir, '{}_{}.log'.format(log_basename, datetime.now().strftime('%F')))
     Handler = logging.FileHandler(logFileName, 'a', 'utf-8')
 
 
